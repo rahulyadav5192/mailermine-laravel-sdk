@@ -1,0 +1,232 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Tests (PHP ${{ matrix.php }}, Laravel ${{ matrix.laravel }}, ${{ matrix.dependency-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.4']
+        laravel: [12, 13]
+        dependency-version: [prefer-stable]
+        include:
+          - laravel: 12
+            testbench: ^10.0
+          - laravel: 13
+            testbench: ^11.0
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, json, mbstring
+          coverage: none
+          tools: composer:v2
+
+      - name: Constrain framework versions
+        run: |
+          composer require --no-update --dev \
+            "laravel/framework:^${{ matrix.laravel }}.0" \
+            "orchestra/testbench:${{ matrix.testbench }}"
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ matrix.php }}-${{ matrix.laravel }}-${{ hashFiles('composer.json') }}
+          restore-keys: composer-${{ matrix.php }}-${{ matrix.laravel }}-
+
+      - name: Install dependencies
+        run: composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-progress
+
+      - name: Run tests
+        run: composer test
+
+  code-style:
+    name: Code Style (Pint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, json, mbstring
+          tools: composer:v2
+      - run: composer install --prefer-dist --no-interaction --no-progress
+      - name: Check code style
+        run: composer test:lint
+
+  static-analysis:
+    name: Static Analysis (PHPStan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, json, mbstring
+          tools: composer:v2
+      - run: composer install --prefer-dist --no-interaction --no-progress
+      - name: Run PHPStan
+        run: composer test:types
+
+  composer-validate:
+    name: Composer Validate & Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, json, mbstring
+          tools: composer:v2
+      - name: Validate composer.json
+        run: composer validate --strict
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
+      - name: Composer audit (security advisories)
+        run: composer audit
+
+  openapi-validation:
+    name: OpenAPI Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate OpenAPI specification
+        run: npx --yes @apidevtools/swagger-cli@4 validate openapi.json
+
+  examples:
+    name: Build Examples
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: curl, json, mbstring
+          tools: composer:v2
+      - run: composer install --prefer-dist --no-interaction --no-progress
+      - name: Lint example files
+        run: |
+          status=0
+          for file in examples/*.php; do
+            php -l "$file" || status=1
+          done
+          exit $status
+
+  documentation:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify documentation guides exist
+        run: |
+          required=(
+            docs/README.md
+            docs/installation.md
+            docs/quick-start.md
+            docs/authentication.md
+            docs/transactional.md
+            docs/domains.md
+            docs/templates.md
+            docs/contacts.md
+            docs/campaigns.md
+            docs/analytics.md
+            docs/webhooks.md
+            docs/faq.md
+            docs/troubleshooting.md
+            docs/migration.md
+            docs/website/README.md
+            LICENSE
+            CHANGELOG.md
+            CONTRIBUTING.md
+            SECURITY.md
+            CODE_OF_CONDUCT.md
+            RELEASE_CHECKLIST.md
+          )
+          missing=0
+          for file in "${required[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              echo "Missing: $file"
+              missing=1
+            fi
+          done
+          exit $missing
+      - name: Verify canonical examples exist
+        run: |
+          required=(
+            examples/send-email.php
+            examples/attachments.php
+            examples/verify-domain.php
+            examples/create-template.php
+            examples/import-contacts.php
+            examples/create-campaign.php
+            examples/analytics.php
+            examples/webhooks.php
+          )
+          missing=0
+          for file in "${required[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              echo "Missing: $file"
+              missing=1
+            fi
+          done
+          exit $missing
+
+  installation:
+    name: Test Installation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: package
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, json, mbstring
+          tools: composer:v2
+      - name: Install package into a fresh project
+        run: |
+          mkdir consumer && cd consumer
+          composer init --name="mailermine/install-test" --no-interaction
+          composer config repositories.local path ../package
+          composer config minimum-stability dev
+          composer require "mailermine/mailermine:*" --no-interaction --no-progress
+      - name: Verify the package autoloads
+        run: |
+          cd consumer
+          php -r "require 'vendor/autoload.php'; \$c = new MailerMine\Client('test-key'); echo get_class(\$c->emails()), PHP_EOL;"
+      - name: Verify Laravel auto-discovery metadata
+        run: |
+          cd consumer
+          php -r '
+            $json = json_decode(file_get_contents("vendor/mailermine/mailermine/composer.json"), true);
+            assert(($json["extra"]["laravel"]["providers"][0] ?? null) === "MailerMine\\Laravel\\MailerMineServiceProvider");
+            assert(($json["extra"]["laravel"]["aliases"]["MailerMine"] ?? null) === "MailerMine\\Facades\\MailerMine");
+            echo "Laravel auto-discovery OK", PHP_EOL;
+          '

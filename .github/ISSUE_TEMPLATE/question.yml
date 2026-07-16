@@ -1,0 +1,32 @@
+name: Question
+description: Ask a question about using the MailerMine SDK.
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a usage question? Consider starting a
+        [discussion](https://github.com/rahulyadav5192/mailermine-laravel-sdk/discussions)
+        instead — it is a better place for Q&A. If you prefer an issue, fill out
+        the fields below.
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Include relevant code and documentation you have already looked at.
+    validations:
+      required: false
+  - type: input
+    id: sdk-version
+    attributes:
+      label: SDK version
+      placeholder: "1.0.0"
+    validations:
+      required: false

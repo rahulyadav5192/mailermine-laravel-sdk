@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question / Discussions
+    url: https://github.com/rahulyadav5192/mailermine-laravel-sdk/discussions
+    about: Ask usage questions and share ideas with the community.
+  - name: Documentation
+    url: https://mailermine.com/docs/sdk/php
+    about: Read the MailerMine PHP SDK documentation.
+  - name: Report a security vulnerability
+    url: https://github.com/rahulyadav5192/mailermine-laravel-sdk/security/advisories/new
+    about: Please report security issues privately, not as public issues.

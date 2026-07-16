@@ -1,0 +1,28 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+    excludePaths:
+        - generated/*
+        - examples/*
+        - vendor/*
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        # The generated OpenAPI client documents date query parameters as
+        # \DateTime, but the underlying query serializer requires ISO-8601
+        # strings (passing a \DateTime raises a runtime "could not be converted
+        # to string" error). The SDK intentionally passes strings for these
+        # query parameters. generated/ must not be modified, so we ignore the
+        # inaccurate generated PHPDoc here.
+        -
+            message: '#expects DateTime\|null, string\|null given\.#'
+            paths:
+                - src/Resources/Analytics.php
+                - src/Resources/Contacts.php
+                - src/Resources/Emails.php
+                - src/Resources/Events.php
+                - src/Resources/Messages.php
+                - src/Resources/Webhooks.php
