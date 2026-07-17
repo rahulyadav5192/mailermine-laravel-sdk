@@ -8,6 +8,15 @@ use Throwable;
 
 /**
  * Thrown when the API rate limit has been exceeded (HTTP 429).
+ *
+ * @example
+ * use MailerMine\Exceptions\RateLimitException;
+ *
+ * try {
+ *     MailerMine::emails()->send([...]);
+ * } catch (RateLimitException $e) {
+ *     sleep($e->getRetryAfter() ?? 60);
+ * }
  */
 final class RateLimitException extends ApiException
 {
@@ -26,6 +35,9 @@ final class RateLimitException extends ApiException
         parent::__construct($message, $statusCode, $responseBody, $headers, $responseObject, $previous);
     }
 
+    /**
+     * Seconds to wait before retrying, from the `Retry-After` header, or null.
+     */
     public function getRetryAfter(): ?int
     {
         return $this->retryAfter;

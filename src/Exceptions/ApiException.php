@@ -26,11 +26,17 @@ class ApiException extends Exception
         parent::__construct($message, $statusCode, $previous);
     }
 
+    /**
+     * The HTTP status code, or 0 for client-side/transport errors.
+     */
     public function getStatusCode(): int
     {
         return $this->statusCode;
     }
 
+    /**
+     * The decoded response body, when available.
+     */
     public function getResponseBody(): mixed
     {
         return $this->responseBody;
@@ -44,6 +50,9 @@ class ApiException extends Exception
         return $this->headers;
     }
 
+    /**
+     * The raw generated response object, when available.
+     */
     public function getResponseObject(): mixed
     {
         return $this->responseObject;
@@ -80,11 +89,17 @@ class ApiException extends Exception
         return null;
     }
 
+    /**
+     * Whether this is a 4xx client error.
+     */
     public function isClientError(): bool
     {
         return $this->statusCode >= 400 && $this->statusCode < 500;
     }
 
+    /**
+     * Whether this is a 5xx server error.
+     */
     public function isServerError(): bool
     {
         return $this->statusCode >= 500;

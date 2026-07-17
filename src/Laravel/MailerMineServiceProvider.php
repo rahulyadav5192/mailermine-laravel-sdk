@@ -11,6 +11,9 @@ use MailerMine\Contracts\ClientContract;
 
 final class MailerMineServiceProvider extends ServiceProvider
 {
+    /**
+     * Register the configuration and client bindings in the container.
+     */
     public function register(): void
     {
         $this->mergeConfigFrom(
@@ -34,6 +37,9 @@ final class MailerMineServiceProvider extends ServiceProvider
         $this->app->alias(Client::class, 'mailermine');
     }
 
+    /**
+     * Publish the package configuration when running in the console.
+     */
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {

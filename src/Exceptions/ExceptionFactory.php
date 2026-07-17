@@ -11,6 +11,9 @@ use OpenAPI\Client\ApiException as GeneratedApiException;
  */
 final class ExceptionFactory
 {
+    /**
+     * Map a generated OpenAPI exception onto the matching SDK exception.
+     */
     public static function fromGenerated(GeneratedApiException $exception): ApiException
     {
         $statusCode = $exception->getCode();
