@@ -94,6 +94,14 @@ final class LaravelIntegrationTest extends TestCase
         );
     }
 
+    public function test_the_mailermine_helper_resolves_the_shared_client(): void
+    {
+        self::assertTrue(function_exists('mailermine'));
+        self::assertInstanceOf(Client::class, mailermine());
+        self::assertSame($this->app->make(Client::class), mailermine());
+        self::assertInstanceOf(Emails::class, mailermine()->emails());
+    }
+
     public function test_the_config_file_is_publishable(): void
     {
         $paths = MailerMineServiceProvider::pathsToPublish(

@@ -20,8 +20,16 @@ final class ExceptionFactory
         $object = $exception->getResponseObject();
 
         return match (true) {
-            $statusCode === 401, $statusCode === 403 => new AuthenticationException(
+            $statusCode === 401 => new AuthenticationException(
                 message: $message !== '' ? $message : 'Authentication failed. Check your API key.',
+                statusCode: $statusCode,
+                responseBody: $body,
+                headers: $headers,
+                responseObject: $object,
+                previous: $exception,
+            ),
+            $statusCode === 403 => new PlanException(
+                message: self::planMessage($message),
                 statusCode: $statusCode,
                 responseBody: $body,
                 headers: $headers,
@@ -63,6 +71,29 @@ final class ExceptionFactory
                 previous: $exception,
             ),
         };
+    }
+
+    /**
+     * Build an actionable message for plan / feature restrictions (HTTP 403),
+     * appending upgrade guidance when the API message does not already mention it.
+     */
+    private static function planMessage(string $message): string
+    {
+        $base = $message !== ''
+            ? $message
+            : 'This action is not available on your current MailerMine plan.';
+
+        $guidance = sprintf(
+            'If your plan does not include this feature, upgrade at %s. '
+            .'Otherwise, contact support@mailermine.com if you believe this is an error.',
+            PlanException::UPGRADE_URL,
+        );
+
+        if (stripos($base, PlanException::UPGRADE_URL) !== false) {
+            return $base;
+        }
+
+        return rtrim($base, '.').'. '.$guidance;
     }
 
     private static function resolveMessage(GeneratedApiException $exception): string

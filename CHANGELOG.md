@@ -27,9 +27,17 @@ Initial public release of the MailerMine PHP & Laravel SDK.
   `Webhooks::verify()` for HMAC-SHA256 signature verification.
 - Suppression list management.
 - First-class Laravel integration: auto-discovered service provider, `MailerMine`
-  facade, and publishable configuration.
-- Typed exceptions (`AuthenticationException`, `ValidationException`,
-  `NotFoundException`, `RateLimitException`, `ApiException`).
+  facade, publishable configuration, and a global `mailermine()` helper that
+  resolves the shared client from the container.
+- Typed exceptions (`AuthenticationException`, `PlanException`,
+  `NotFoundException`, `ValidationException`, `RateLimitException`,
+  `ApiException`). Plan and feature restrictions (HTTP 403) raise a dedicated
+  `PlanException` with actionable upgrade guidance and `getUpgradeUrl()`, and are
+  no longer conflated with authentication failures (HTTP 401).
+- Client-side request validation: invalid payloads raise a friendly
+  `ValidationException` before a request is sent, and generated OpenAPI
+  exceptions are always converted into SDK exceptions.
+- `ApiException::getRequestId()` for correlating failures with support.
 - `Response`, `Collection`, and `Pagination` value objects for ergonomic access.
 
 [Unreleased]: https://github.com/rahulyadav5192/mailermine-laravel-sdk/compare/v1.0.0...HEAD

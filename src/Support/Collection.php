@@ -36,26 +36,41 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Jso
         return $this->items;
     }
 
+    /**
+     * The first item, or null when the collection is empty.
+     */
     public function first(): mixed
     {
         return $this->items[0] ?? null;
     }
 
+    /**
+     * Whether the collection has no items.
+     */
     public function isEmpty(): bool
     {
         return $this->items === [];
     }
 
+    /**
+     * Whether the collection has at least one item.
+     */
     public function isNotEmpty(): bool
     {
         return $this->items !== [];
     }
 
+    /**
+     * Pagination metadata for this page of results, when available.
+     */
     public function pagination(): ?Pagination
     {
         return $this->pagination;
     }
 
+    /**
+     * The number of items on this page (Countable).
+     */
     public function count(): int
     {
         return count($this->items);
@@ -69,21 +84,33 @@ final class Collection implements ArrayAccess, Countable, IteratorAggregate, Jso
         return new ArrayIterator($this->items);
     }
 
+    /**
+     * Whether an item exists at the given index (ArrayAccess).
+     */
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->items[$offset]);
     }
 
+    /**
+     * Read the item at the given index, or null when absent (ArrayAccess).
+     */
     public function offsetGet(mixed $offset): mixed
     {
         return $this->items[$offset] ?? null;
     }
 
+    /**
+     * Collections are immutable; always throws.
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         throw new LogicException('MailerMine collections are immutable.');
     }
 
+    /**
+     * Collections are immutable; always throws.
+     */
     public function offsetUnset(mixed $offset): void
     {
         throw new LogicException('MailerMine collections are immutable.');

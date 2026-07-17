@@ -59,6 +59,9 @@ final class Configuration
         );
     }
 
+    /**
+     * The MailerMine API key used to authenticate requests.
+     */
     public function apiKey(): string
     {
         return $this->apiKey;
@@ -72,16 +75,25 @@ final class Configuration
         return $this->baseUrl ?? self::DEFAULT_BASE_URL;
     }
 
+    /**
+     * The request timeout in seconds.
+     */
     public function timeout(): float
     {
         return $this->timeout;
     }
 
+    /**
+     * The User-Agent header sent with every request.
+     */
     public function userAgent(): string
     {
         return $this->userAgent;
     }
 
+    /**
+     * Whether generated-client debug logging is enabled.
+     */
     public function debug(): bool
     {
         return $this->debug;

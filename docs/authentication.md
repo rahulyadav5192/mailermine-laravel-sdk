@@ -47,7 +47,7 @@ $mm = new Client(new Configuration(
 ## Authentication errors
 
 Invalid or missing keys raise `MailerMine\Exceptions\AuthenticationException`
-(HTTP 401 / 403):
+(HTTP 401):
 
 ```php
 use MailerMine\Exceptions\AuthenticationException;
@@ -56,6 +56,21 @@ try {
     $mm->emails()->send([...]);
 } catch (AuthenticationException $e) {
     // Check MAILERMINE_API_KEY
+}
+```
+
+A valid key that lacks access to a feature — because the plan does not include
+it, the account is restricted, or the key is used across projects — raises
+`MailerMine\Exceptions\PlanException` (HTTP 403) instead. Its message includes
+upgrade guidance, and `getUpgradeUrl()` returns the billing URL:
+
+```php
+use MailerMine\Exceptions\PlanException;
+
+try {
+    $mm->emails()->send([...]);
+} catch (PlanException $e) {
+    return redirect()->away($e->getUpgradeUrl());
 }
 ```
 

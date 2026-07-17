@@ -39,6 +39,17 @@ $response = MailerMine::emails()->send([
 echo $response->data()['uuid'];
 ```
 
+**`mailermine()` helper:**
+
+```php
+$response = mailermine()->emails()->send([
+    'from'    => 'hello@mailermine.com',
+    'to'      => 'john@example.com',
+    'subject' => 'Hello from MailerMine',
+    'html'    => '<h1>It works!</h1>',
+]);
+```
+
 **Dependency injection:**
 
 ```php

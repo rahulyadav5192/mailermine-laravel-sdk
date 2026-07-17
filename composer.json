@@ -50,7 +50,10 @@
         "psr-4": {
             "MailerMine\\": "src/",
             "OpenAPI\\Client\\": "generated/lib/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

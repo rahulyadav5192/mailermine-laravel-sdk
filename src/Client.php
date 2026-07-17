@@ -131,91 +131,145 @@ final class Client implements ClientContract
         return $this->httpClient;
     }
 
+    /**
+     * Transactional emails: send, list, retrieve, and track message events.
+     */
     public function emails(): Emails
     {
         return $this->emails ??= new Emails($this);
     }
 
+    /**
+     * Sending domains: create, verify, and inspect DNS records.
+     */
     public function domains(): Domains
     {
         return $this->domains ??= new Domains($this);
     }
 
+    /**
+     * Reusable email templates: create, preview, and test.
+     */
     public function templates(): Templates
     {
         return $this->templates ??= new Templates($this);
     }
 
+    /**
+     * Projects: manage the workspaces that scope your API keys and data.
+     */
     public function projects(): Projects
     {
         return $this->projects ??= new Projects($this);
     }
 
+    /**
+     * API keys: create, rotate, and revoke project-scoped keys.
+     */
     public function apiKeys(): ApiKeys
     {
         return $this->apiKeys ??= new ApiKeys($this);
     }
 
+    /**
+     * Contacts: manage your audience, subscriptions, and custom fields.
+     */
     public function contacts(): Contacts
     {
         return $this->contacts ??= new Contacts($this);
     }
 
+    /**
+     * Lists: manage static contact lists and their membership.
+     */
     public function lists(): Lists
     {
         return $this->lists ??= new Lists($this);
     }
 
+    /**
+     * Segments: manage dynamic, rule-based audiences.
+     */
     public function segments(): Segments
     {
         return $this->segments ??= new Segments($this);
     }
 
+    /**
+     * Campaigns: create, schedule, send, and analyze marketing campaigns.
+     */
     public function campaigns(): Campaigns
     {
         return $this->campaigns ??= new Campaigns($this);
     }
 
+    /**
+     * Analytics: account-wide delivery and engagement metrics.
+     */
     public function analytics(): Analytics
     {
         return $this->analytics ??= new Analytics($this);
     }
 
+    /**
+     * Webhooks: manage endpoints, deliveries, and signature verification.
+     */
     public function webhooks(): Webhooks
     {
         return $this->webhooks ??= new Webhooks($this);
     }
 
+    /**
+     * Suppressions: manage the account suppression list.
+     */
     public function suppressions(): Suppressions
     {
         return $this->suppressions ??= new Suppressions($this);
     }
 
+    /**
+     * Imports: bulk-import contacts from uploaded files.
+     */
     public function imports(): Imports
     {
         return $this->imports ??= new Imports($this);
     }
 
+    /**
+     * Exports: generate and download data exports.
+     */
     public function exports(): Exports
     {
         return $this->exports ??= new Exports($this);
     }
 
+    /**
+     * Tags: manage contact tags and their assignments.
+     */
     public function tags(): Tags
     {
         return $this->tags ??= new Tags($this);
     }
 
+    /**
+     * Audiences: a unified view over lists and segments for campaigns.
+     */
     public function audiences(): Audiences
     {
         return $this->audiences ??= new Audiences($this);
     }
 
+    /**
+     * Messages: query the message history and delivery logs.
+     */
     public function messages(): Messages
     {
         return $this->messages ??= new Messages($this);
     }
 
+    /**
+     * Events: query message and delivery lifecycle events.
+     */
     public function events(): Events
     {
         return $this->events ??= new Events($this);

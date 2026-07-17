@@ -49,6 +49,37 @@ class ApiException extends Exception
         return $this->responseObject;
     }
 
+    /**
+     * The MailerMine request ID from the error response, when available.
+     *
+     * Include this when contacting support so a request can be traced.
+     */
+    public function getRequestId(): ?string
+    {
+        $body = $this->responseBody;
+
+        if (is_object($body) && isset($body->request_id) && is_string($body->request_id)) {
+            return $body->request_id;
+        }
+
+        if (is_array($body) && isset($body['request_id']) && is_string($body['request_id'])) {
+            return $body['request_id'];
+        }
+
+        foreach (['X-Request-Id', 'x-request-id'] as $header) {
+            if (isset($this->headers[$header])) {
+                $value = $this->headers[$header];
+                $value = is_array($value) ? ($value[0] ?? null) : $value;
+
+                if (is_string($value) && $value !== '') {
+                    return $value;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public function isClientError(): bool
     {
         return $this->statusCode >= 400 && $this->statusCode < 500;

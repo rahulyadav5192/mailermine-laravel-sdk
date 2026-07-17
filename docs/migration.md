@@ -35,10 +35,14 @@ MAILERMINE_BASE_URL=https://mailermine.com/api/v1
    without notice.
 
 3. Prefer `Response::data()`, `Collection`, and typed exceptions
-   (`AuthenticationException`, `ValidationException`, etc.) over raw HTTP
-   clients.
+   (`AuthenticationException`, `PlanException`, `ValidationException`, etc.) over
+   raw HTTP clients.
 
-4. Confirm your `MAILERMINE_BASE_URL` includes `/api/v1`.
+4. If you previously caught `AuthenticationException` for HTTP 403 plan or
+   feature restrictions, catch `MailerMine\Exceptions\PlanException` instead.
+   `AuthenticationException` now maps to HTTP 401 (invalid API key) only.
+
+5. Confirm your `MAILERMINE_BASE_URL` includes `/api/v1`.
 
 ### Future major versions
 

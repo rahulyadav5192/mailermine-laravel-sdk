@@ -145,9 +145,10 @@ variable — **never commit API keys to source control**.
 
 ## Quick Start
 
-Resolve the client and send your first email.
+Send your first email. In Laravel, use whichever access style you prefer — they
+all resolve the same shared, pre-configured client.
 
-**Laravel (facade):**
+**1. Facade** (recommended for most Laravel apps):
 
 ```php
 use MailerMine\Facades\MailerMine;
@@ -162,7 +163,19 @@ $email = MailerMine::emails()->send([
 echo $email->data()['uuid'];
 ```
 
-**Laravel (dependency injection):**
+**2. `mailermine()` helper** (a quick global shortcut):
+
+```php
+$email = mailermine()->emails()->send([
+    'from'    => 'hello@mailermine.com',
+    'to'      => 'john@example.com',
+    'subject' => 'Hello from MailerMine',
+    'html'    => '<h1>It works!</h1>',
+]);
+```
+
+**3. Dependency injection** (best for testable services — type-hint the client
+or the `ClientContract` interface):
 
 ```php
 use MailerMine\Client;
@@ -183,7 +196,7 @@ class WelcomeMailer
 }
 ```
 
-**Pure PHP:**
+**4. Raw client** (outside Laravel, or when you need full control):
 
 ```php
 $mm = new MailerMine\Client('your-api-key');
@@ -197,7 +210,7 @@ $mm->emails()->send([
 ```
 
 > The rest of this guide uses a `$mm` client instance. In Laravel you can swap
-> `$mm->` for the `MailerMine::` facade anywhere.
+> `$mm->` for the `MailerMine::` facade or the `mailermine()` helper anywhere.
 
 ## Documentation
 
@@ -582,38 +595,54 @@ do {
 
 The SDK maps API failures to typed exceptions, all extending `ApiException`:
 
-| Exception                 | HTTP status | When                              |
-| ------------------------- | ----------- | --------------------------------- |
-| `AuthenticationException` | 401 / 403   | Missing or invalid API key        |
-| `NotFoundException`       | 404         | Resource does not exist           |
-| `ValidationException`     | 422         | Invalid request data              |
-| `RateLimitException`      | 429         | Rate limit exceeded               |
-| `ApiException`            | other       | Any other API/transport error     |
+| Exception                 | HTTP status | When                                            |
+| ------------------------- | ----------- | ----------------------------------------------- |
+| `AuthenticationException` | 401         | Missing or invalid API key                      |
+| `PlanException`           | 403         | Feature not on your plan, or account restricted |
+| `NotFoundException`       | 404         | Resource does not exist                         |
+| `ValidationException`     | 422         | Invalid request data (server- or client-side)   |
+| `RateLimitException`      | 429         | Rate limit exceeded                             |
+| `ApiException`            | other       | Any other API/transport error                   |
+
+Every exception extends `ApiException`, so a single `catch (ApiException $e)`
+handles them all, and `$e->getRequestId()` returns the MailerMine request ID
+(when present) to include when contacting support.
 
 ```php
 use MailerMine\Exceptions\ApiException;
 use MailerMine\Exceptions\AuthenticationException;
+use MailerMine\Exceptions\PlanException;
 use MailerMine\Exceptions\RateLimitException;
 use MailerMine\Exceptions\ValidationException;
 
 try {
     $mm->emails()->send([...]);
 } catch (ValidationException $e) {
-    // Field-level validation errors
+    // Field-level validation errors (from the API or client-side checks).
     foreach ($e->getErrors() as $field => $messages) {
         // ...
     }
+} catch (PlanException $e) {
+    // The action isn't available on the current plan.
+    // $e->getMessage() already includes actionable upgrade guidance.
+    return redirect()->away($e->getUpgradeUrl());
 } catch (RateLimitException $e) {
     $retryAfter = $e->getRetryAfter(); // seconds, or null
 } catch (AuthenticationException $e) {
-    // Check your API key
+    // The API key is missing or incorrect.
 } catch (ApiException $e) {
     $e->getStatusCode();   // int
     $e->getMessage();      // clean, developer-friendly message
+    $e->getRequestId();    // MailerMine request ID, or null
     $e->getResponseBody(); // raw response body
     $e->getHeaders();      // response headers
 }
 ```
+
+> **Client-side validation:** invalid payloads (for example a missing `from` or
+> `to`) raise a `ValidationException` *before* the request is sent, so you get
+> fast, friendly feedback without a round-trip. Generated OpenAPI exceptions are
+> never exposed — they are always converted into these SDK exceptions.
 
 ## Testing
 

@@ -1,10 +1,18 @@
 # Troubleshooting
 
-## Authentication failed (401 / 403)
+## Authentication failed (401)
 
 - Confirm `MAILERMINE_API_KEY` is set and not empty.
 - Confirm the key has not been revoked.
 - Confirm you are not accidentally using a webhook signing secret as an API key.
+
+## Feature or plan restricted (403)
+
+A `PlanException` means the API key is valid but the action is not permitted —
+usually because the feature is not on your plan, the account is restricted, or a
+project-scoped key is being used across projects. The exception message includes
+upgrade guidance, and `$e->getUpgradeUrl()` returns the billing URL. Include
+`$e->getRequestId()` when contacting support.
 
 ## Connection / host errors
 

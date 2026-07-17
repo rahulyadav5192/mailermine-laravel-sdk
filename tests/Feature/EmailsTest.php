@@ -14,6 +14,7 @@ use MailerMine\Client;
 use MailerMine\Exceptions\ApiException;
 use MailerMine\Exceptions\AuthenticationException;
 use MailerMine\Exceptions\NotFoundException;
+use MailerMine\Exceptions\PlanException;
 use MailerMine\Exceptions\RateLimitException;
 use MailerMine\Exceptions\ValidationException;
 use MailerMine\Support\Collection;
@@ -194,7 +195,7 @@ final class EmailsTest extends TestCase
     public static function errorStatuses(): iterable
     {
         yield 'unauthorized' => [401, AuthenticationException::class];
-        yield 'forbidden' => [403, AuthenticationException::class];
+        yield 'plan restricted' => [403, PlanException::class];
         yield 'not found' => [404, NotFoundException::class];
         yield 'validation failed' => [422, ValidationException::class];
         yield 'rate limited' => [429, RateLimitException::class];
@@ -233,7 +234,11 @@ final class EmailsTest extends TestCase
         } catch (ApiException $exception) {
             self::assertInstanceOf($expectedException, $exception);
             self::assertSame($status, $exception->getStatusCode());
-            self::assertSame('Request failed.', $exception->getMessage());
+            self::assertStringContainsString('Request failed.', $exception->getMessage());
+
+            if ($exception instanceof PlanException) {
+                self::assertStringContainsString($exception->getUpgradeUrl(), $exception->getMessage());
+            }
 
             if ($exception instanceof ValidationException) {
                 self::assertSame(['to' => ['The to field is required.']], $exception->getErrors());

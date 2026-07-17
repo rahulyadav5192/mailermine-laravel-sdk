@@ -19,6 +19,9 @@ final class Pagination implements JsonSerializable
         public readonly int $lastPage,
     ) {}
 
+    /**
+     * Build pagination from a generated PaginationMeta model, or null.
+     */
     public static function fromMeta(?PaginationMeta $meta): ?self
     {
         if ($meta === null) {
@@ -46,6 +49,9 @@ final class Pagination implements JsonSerializable
         );
     }
 
+    /**
+     * Whether more pages are available after the current page.
+     */
     public function hasMorePages(): bool
     {
         return $this->currentPage < $this->lastPage;

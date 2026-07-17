@@ -119,7 +119,12 @@ final class ContactsTest extends TestCase
         ]);
 
         try {
-            $client->contacts()->create(['first_name' => 'John']);
+            // A valid-looking payload passes client-side checks and reaches the
+            // API, so this exercises server-side (HTTP 422) error mapping.
+            $client->contacts()->create([
+                'email' => 'john@example.com',
+                'first_name' => 'John',
+            ]);
             self::fail('Expected ValidationException.');
         } catch (ValidationException $exception) {
             self::assertSame(['email' => ['The email field is required.']], $exception->getErrors());
