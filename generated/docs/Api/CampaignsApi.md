@@ -2,7 +2,7 @@
 
 Build and manage project-scoped marketing campaigns.
 
-All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation defines another base path.
+All URIs are relative to https://mailermine.com/api/v1, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
@@ -270,7 +270,7 @@ previewCampaign($campaign): \OpenAPI\Client\Model\CampaignPreviewResponse
 
 Preview campaign
 
-Render the current campaign subject and bodies without sending. Required scope: `campaigns.read`.
+Render the current campaign subject and bodies without sending. Requires an assigned template (`template_uuid` on create/update or via set-template). Returns HTTP 422 with `template` when no template is assigned. Required scope: `campaigns.read`.
 
 ### Example
 

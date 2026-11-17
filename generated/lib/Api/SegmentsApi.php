@@ -2893,14 +2893,14 @@ class SegmentsApi
      * Update segment
      *
      * @param  string $segment Segment UUID. (required)
-     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest|null $update_segment_request update_segment_request (optional)
+     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest $update_segment_request update_segment_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSegment'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return \OpenAPI\Client\Model\SegmentResponse|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject
      */
-    public function updateSegment($segment, $update_segment_request = null, string $contentType = self::contentTypes['updateSegment'][0])
+    public function updateSegment($segment, $update_segment_request, string $contentType = self::contentTypes['updateSegment'][0])
     {
         list($response) = $this->updateSegmentWithHttpInfo($segment, $update_segment_request, $contentType);
         return $response;
@@ -2912,14 +2912,14 @@ class SegmentsApi
      * Update segment
      *
      * @param  string $segment Segment UUID. (required)
-     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest|null $update_segment_request (optional)
+     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest $update_segment_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSegment'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of \OpenAPI\Client\Model\SegmentResponse|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateSegmentWithHttpInfo($segment, $update_segment_request = null, string $contentType = self::contentTypes['updateSegment'][0])
+    public function updateSegmentWithHttpInfo($segment, $update_segment_request, string $contentType = self::contentTypes['updateSegment'][0])
     {
         $request = $this->updateSegmentRequest($segment, $update_segment_request, $contentType);
 
@@ -3110,13 +3110,13 @@ class SegmentsApi
      * Update segment
      *
      * @param  string $segment Segment UUID. (required)
-     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest|null $update_segment_request (optional)
+     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest $update_segment_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSegment'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateSegmentAsync($segment, $update_segment_request = null, string $contentType = self::contentTypes['updateSegment'][0])
+    public function updateSegmentAsync($segment, $update_segment_request, string $contentType = self::contentTypes['updateSegment'][0])
     {
         return $this->updateSegmentAsyncWithHttpInfo($segment, $update_segment_request, $contentType)
             ->then(
@@ -3132,13 +3132,13 @@ class SegmentsApi
      * Update segment
      *
      * @param  string $segment Segment UUID. (required)
-     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest|null $update_segment_request (optional)
+     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest $update_segment_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSegment'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateSegmentAsyncWithHttpInfo($segment, $update_segment_request = null, string $contentType = self::contentTypes['updateSegment'][0])
+    public function updateSegmentAsyncWithHttpInfo($segment, $update_segment_request, string $contentType = self::contentTypes['updateSegment'][0])
     {
         $returnType = '\OpenAPI\Client\Model\SegmentResponse';
         $request = $this->updateSegmentRequest($segment, $update_segment_request, $contentType);
@@ -3183,13 +3183,13 @@ class SegmentsApi
      * Create request for operation 'updateSegment'
      *
      * @param  string $segment Segment UUID. (required)
-     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest|null $update_segment_request (optional)
+     * @param  \OpenAPI\Client\Model\UpdateSegmentRequest $update_segment_request (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSegment'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function updateSegmentRequest($segment, $update_segment_request = null, string $contentType = self::contentTypes['updateSegment'][0])
+    public function updateSegmentRequest($segment, $update_segment_request, string $contentType = self::contentTypes['updateSegment'][0])
     {
 
         // verify the required parameter 'segment' is set
@@ -3199,6 +3199,12 @@ class SegmentsApi
             );
         }
 
+        // verify the required parameter 'update_segment_request' is set
+        if ($update_segment_request === null || (is_array($update_segment_request) && count($update_segment_request) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $update_segment_request when calling updateSegment'
+            );
+        }
 
 
         $resourcePath = '/segments/{segment}';
@@ -3277,7 +3283,7 @@ class SegmentsApi
         $operationHost = $this->config->getHost();
         $query = ObjectSerializer::buildQuery($queryParams);
         return new Request(
-            'PATCH',
+            'PUT',
             $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
             $headers,
             $httpBody

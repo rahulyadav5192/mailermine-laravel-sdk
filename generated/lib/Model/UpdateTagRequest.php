@@ -317,7 +317,7 @@ class UpdateTagRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets name
      *
-     * @param string|null $name name
+     * @param string|null $name Updated project-unique tag name. Tags do not support a `description` field.
      *
      * @return self
      */
@@ -348,7 +348,7 @@ class UpdateTagRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets color
      *
-     * @param string|null $color color
+     * @param string|null $color Updated display color in hex notation; null clears it.
      *
      * @return self
      */

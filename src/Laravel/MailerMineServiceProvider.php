@@ -26,6 +26,8 @@ final class MailerMineServiceProvider extends ServiceProvider
                 'api_key' => (string) config('mailermine.api_key', ''),
                 'base_url' => config('mailermine.base_url'),
                 'timeout' => (float) config('mailermine.timeout', 30),
+                'max_retries' => config('mailermine.max_retries', Configuration::DEFAULT_MAX_RETRIES),
+                'max_retry_delay' => config('mailermine.max_retry_delay', Configuration::DEFAULT_MAX_RETRY_DELAY),
             ]);
         });
 

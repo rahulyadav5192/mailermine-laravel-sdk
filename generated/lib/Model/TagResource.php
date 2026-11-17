@@ -382,7 +382,7 @@ class TagResource implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets name
      *
-     * @param string $name Project-unique tag name. @example vip
+     * @param string $name Project-unique tag name. Tags do not include a description field. @example vip
      *
      * @return self
      */

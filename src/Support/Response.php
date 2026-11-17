@@ -21,18 +21,64 @@ final class Response implements ArrayAccess, JsonSerializable
 {
     private readonly mixed $payload;
 
+    /**
+     * @param  array<string, mixed>  $headers  HTTP response headers, when known.
+     */
     public function __construct(
         mixed $raw,
+        private readonly array $headers = [],
     ) {
         $this->payload = self::normalize($raw);
     }
 
     /**
+     * HTTP response headers (name => list of values). Empty when unavailable.
+     *
+     * @return array<string, mixed>
+     */
+    public function headers(): array
+    {
+        return $this->headers;
+    }
+
+    /**
+     * A single response header value (case-insensitive), or null.
+     */
+    public function header(string $name): ?string
+    {
+        foreach ($this->headers as $key => $value) {
+            if (strcasecmp((string) $key, $name) === 0) {
+                $value = is_array($value) ? ($value[0] ?? null) : $value;
+
+                return is_scalar($value) ? (string) $value : null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Rate-limit state for the request that produced this response.
+     */
+    public function rateLimit(): ?RateLimit
+    {
+        return RateLimit::fromHeaders($this->headers);
+    }
+
+    /**
+     * True when the API replayed a stored response for a repeated Idempotency-Key.
+     */
+    public function wasIdempotentReplay(): bool
+    {
+        return strtolower((string) $this->header('Idempotent-Replayed')) === 'true';
+    }
+
+    /**
      * Wrap a raw generated response or array in a clean SDK response.
      */
-    public static function from(mixed $raw): self
+    public static function from(mixed $raw, array $headers = []): self
     {
-        return new self($raw);
+        return new self($raw, $headers);
     }
 
     /**

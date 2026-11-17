@@ -6,12 +6,12 @@
         "description": "MailerMine API \u2014 send email and manage projects, API keys, domains, templates, contacts, audiences, and delivery data.",
         "license": {
             "name": "MailerMine API License",
-            "url": "http://127.0.0.1:8000/legal/terms"
+            "url": "https://mailermine.com/terms"
         }
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000/api/v1",
+            "url": "https://mailermine.com/api/v1",
             "description": "MailerMine API v1"
         }
     ],
@@ -2460,7 +2460,7 @@
         "/campaigns/{campaign}/preview": {
             "get": {
                 "operationId": "previewCampaign",
-                "description": "Render the current campaign subject and bodies without sending. Required scope: `campaigns.read`.",
+                "description": "Render the current campaign subject and bodies without sending. Requires an assigned template (`template_uuid` on create/update or via set-template). Returns HTTP 422 with `template` when no template is assigned. Required scope: `campaigns.read`.",
                 "summary": "Preview campaign",
                 "tags": [
                     "Campaigns"
@@ -2508,6 +2508,9 @@
                             }
                         }
                     },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
                     "400": {
                         "$ref": "#/components/responses/BadRequest"
                     },
@@ -2522,9 +2525,6 @@
                     },
                     "409": {
                         "$ref": "#/components/responses/Conflict"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationError"
                     },
                     "429": {
                         "$ref": "#/components/responses/RateLimited"
@@ -5525,7 +5525,8 @@
                         "required": true,
                         "description": "The message UUID",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -5760,6 +5761,9 @@
                             }
                         }
                     },
+                    "409": {
+                        "$ref": "#/components/responses/Conflict"
+                    },
                     "400": {
                         "$ref": "#/components/responses/BadRequest"
                     },
@@ -5771,9 +5775,6 @@
                     },
                     "404": {
                         "$ref": "#/components/responses/NotFound"
-                    },
-                    "409": {
-                        "$ref": "#/components/responses/Conflict"
                     },
                     "422": {
                         "$ref": "#/components/responses/ValidationError"
@@ -5922,6 +5923,9 @@
                             }
                         }
                     },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
                     "400": {
                         "$ref": "#/components/responses/BadRequest"
                     },
@@ -5936,9 +5940,6 @@
                     },
                     "409": {
                         "$ref": "#/components/responses/Conflict"
-                    },
-                    "422": {
-                        "$ref": "#/components/responses/ValidationError"
                     },
                     "429": {
                         "$ref": "#/components/responses/RateLimited"
@@ -6053,6 +6054,17 @@
                 "tags": [
                     "Emails"
                 ],
+                "parameters": [
+                    {
+                        "name": "Idempotency-Key",
+                        "in": "header",
+                        "description": "Optional unique key (max 255 chars). Retrying with the same key and body returns the original response instead of sending again; the same key with a different body returns 422. Keys are kept for 24 hours.",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "order-1042-receipt"
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -6100,6 +6112,13 @@
                             }
                         },
                         "headers": {
+                            "Idempotent-Replayed": {
+                                "description": "Present and `true` when the response was replayed for a repeated Idempotency-Key.",
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": "true"
+                            },
                             "X-RateLimit-Limit": {
                                 "description": "Maximum requests per window.",
                                 "schema": {
@@ -6123,6 +6142,9 @@
                     "422": {
                         "$ref": "#/components/responses/ValidationError"
                     },
+                    "409": {
+                        "$ref": "#/components/responses/Conflict"
+                    },
                     "400": {
                         "$ref": "#/components/responses/BadRequest"
                     },
@@ -6140,9 +6162,6 @@
                     },
                     "404": {
                         "$ref": "#/components/responses/NotFound"
-                    },
-                    "409": {
-                        "$ref": "#/components/responses/Conflict"
                     }
                 }
             }
@@ -6195,7 +6214,7 @@
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "Free-text search across recipient and payload.",
+                        "description": "Free-text search across recipient.",
                         "schema": {
                             "type": "string"
                         }
@@ -6652,7 +6671,7 @@
                 ],
                 "x-scope-enforcement": "Scopes are declared for forward compatibility; runtime enforcement is being rolled out."
             },
-            "patch": {
+            "put": {
                 "operationId": "updateList",
                 "description": "Update a static contact list. Required scope: `contacts.write`.",
                 "summary": "Update contact list",
@@ -7417,7 +7436,8 @@
                         "required": true,
                         "description": "The message UUID",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -7452,14 +7472,14 @@
                             }
                         }
                     },
-                    "404": {
-                        "$ref": "#/components/responses/NotFound"
-                    },
                     "401": {
                         "$ref": "#/components/responses/Unauthorized"
                     },
                     "403": {
                         "$ref": "#/components/responses/Forbidden"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
                     },
                     "429": {
                         "$ref": "#/components/responses/RateLimited"
@@ -7860,7 +7880,7 @@
             },
             "delete": {
                 "operationId": "deleteProject",
-                "description": "Soft-delete a project. Deletion is blocked while active domains, queued messages, or active campaigns remain. Required scope: `projects.write`.",
+                "description": "Deactivate a project (status becomes inactive). Related data such as API keys, domains, and campaigns is kept. Deletion is blocked while queued messages or active campaigns remain. Required scope: `projects.write`.",
                 "summary": "Delete project",
                 "tags": [
                     "Projects"
@@ -8989,7 +9009,7 @@
                 ],
                 "x-scope-enforcement": "Scopes are declared for forward compatibility; runtime enforcement is being rolled out."
             },
-            "patch": {
+            "put": {
                 "operationId": "updateSegment",
                 "description": "Update segment metadata or rules. Required scope: `contacts.write`.",
                 "summary": "Update segment",
@@ -9009,6 +9029,7 @@
                     }
                 ],
                 "requestBody": {
+                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
@@ -9501,6 +9522,86 @@
             }
         },
         "/suppressions/{suppression}": {
+            "get": {
+                "operationId": "getSuppression",
+                "description": "Retrieve a suppressed address by UUID. Required scope: `suppressions.read`.",
+                "summary": "Get suppression",
+                "tags": [
+                    "Suppressions"
+                ],
+                "parameters": [
+                    {
+                        "name": "suppression",
+                        "in": "path",
+                        "required": true,
+                        "description": "Suppression UUID (returned as `id` from create/list).",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Suppression retrieved successfully.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuppressionResponse"
+                                }
+                            }
+                        },
+                        "headers": {
+                            "X-RateLimit-Limit": {
+                                "description": "Maximum requests per window.",
+                                "schema": {
+                                    "type": "integer"
+                                }
+                            },
+                            "X-RateLimit-Remaining": {
+                                "description": "Requests remaining in the current window.",
+                                "schema": {
+                                    "type": "integer"
+                                }
+                            },
+                            "X-RateLimit-Reset": {
+                                "description": "Unix timestamp when the current window resets.",
+                                "schema": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/Forbidden"
+                    },
+                    "409": {
+                        "$ref": "#/components/responses/Conflict"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ValidationError"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/RateLimited"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ServerError"
+                    }
+                },
+                "x-required-scopes": [
+                    "suppressions.read"
+                ],
+                "x-scope-enforcement": "Scopes are declared for forward compatibility; runtime enforcement is being rolled out."
+            },
             "delete": {
                 "operationId": "deleteSuppression",
                 "description": "Permanently remove a suppression, allowing the address to receive mail again. Required scope: `suppressions.write`.",
@@ -9551,6 +9652,9 @@
                             }
                         }
                     },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
                     "400": {
                         "$ref": "#/components/responses/BadRequest"
                     },
@@ -9559,9 +9663,6 @@
                     },
                     "403": {
                         "$ref": "#/components/responses/Forbidden"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFound"
                     },
                     "409": {
                         "$ref": "#/components/responses/Conflict"
@@ -13530,6 +13631,11 @@
                                 "projects.write",
                                 "api_keys.read",
                                 "api_keys.write",
+                                "webhooks.read",
+                                "webhooks.write",
+                                "suppressions.read",
+                                "suppressions.write",
+                                "events.read",
                                 "admin"
                             ]
                         }
@@ -13561,6 +13667,11 @@
                                 "projects.write",
                                 "api_keys.read",
                                 "api_keys.write",
+                                "webhooks.read",
+                                "webhooks.write",
+                                "suppressions.read",
+                                "suppressions.write",
+                                "events.read",
                                 "admin"
                             ]
                         }
@@ -13629,6 +13740,11 @@
                                 "projects.write",
                                 "api_keys.read",
                                 "api_keys.write",
+                                "webhooks.read",
+                                "webhooks.write",
+                                "suppressions.read",
+                                "suppressions.write",
+                                "events.read",
                                 "admin"
                             ]
                         }
@@ -13655,6 +13771,11 @@
                                 "projects.write",
                                 "api_keys.read",
                                 "api_keys.write",
+                                "webhooks.read",
+                                "webhooks.write",
+                                "suppressions.read",
+                                "suppressions.write",
+                                "events.read",
                                 "admin"
                             ]
                         }
@@ -13918,12 +14039,20 @@
                 "properties": {
                     "name": {
                         "type": "string",
+                        "description": "Project-unique tag name. Tags do not support a `description` field.",
+                        "examples": [
+                            "vip"
+                        ],
                         "maxLength": 255
                     },
                     "color": {
                         "type": [
                             "string",
                             "null"
+                        ],
+                        "description": "Optional display color in hex notation.",
+                        "examples": [
+                            "#7C3AED"
                         ],
                         "maxLength": 16
                     }
@@ -15623,7 +15752,7 @@
                             "array",
                             "null"
                         ],
-                        "description": "Provider/event metadata. @var array<string, mixed>|null",
+                        "description": "Customer-safe event details. @var array<string, mixed>|null",
                         "items": {}
                     },
                     "occurred_at": {
@@ -16606,6 +16735,104 @@
                             "August product newsletter"
                         ],
                         "maxLength": 255
+                    },
+                    "subject": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 500
+                    },
+                    "preview_text": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 500
+                    },
+                    "from_name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "maxLength": 255
+                    },
+                    "from_email": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "reply_to": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "email",
+                        "maxLength": 255
+                    },
+                    "template_uuid": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uuid",
+                        "description": "Published template UUID."
+                    },
+                    "template_id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uuid",
+                        "description": "Published template UUID (alias of `template_uuid`)."
+                    },
+                    "segment_uuid": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uuid",
+                        "description": "Audience segment UUID."
+                    },
+                    "segment_id": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uuid",
+                        "description": "Audience segment UUID (alias of `segment_uuid`)."
+                    },
+                    "send_immediately": {
+                        "type": "boolean",
+                        "description": "Whether delivery should be immediate. Defaults to true (draft).",
+                        "examples": [
+                            true
+                        ]
+                    },
+                    "scheduled_at": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "Required when `send_immediately` is false. ISO-8601 date-time.",
+                        "examples": [
+                            "2026-08-15T09:00:00-04:00"
+                        ]
+                    },
+                    "timezone": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "IANA timezone used to interpret `scheduled_at`. Required when scheduling.",
+                        "examples": [
+                            "America/New_York"
+                        ],
+                        "maxLength": 64
                     }
                 },
                 "required": [
@@ -18235,7 +18462,7 @@
                     },
                     "status": {
                         "type": "string",
-                        "description": "Project lifecycle status. @var 'active'|'archived' @example active"
+                        "description": "Project lifecycle status. @var 'active'|'archived'|'inactive' @example active"
                     },
                     "settings": {
                         "type": "array",
@@ -18677,7 +18904,7 @@
                     },
                     "name": {
                         "type": "string",
-                        "description": "Project-unique tag name. @example vip"
+                        "description": "Project-unique tag name. Tags do not include a description field. @example vip"
                     },
                     "color": {
                         "type": "string",
@@ -18734,10 +18961,12 @@
             },
             "TemplateLayoutStyle": {
                 "type": "string",
+                "description": "| |\n|---|\n| `classic` <br/>  |\n| `modern` <br/>  |\n| `minimal` <br/>  |\n| `none` <br/> Email Studio / full custom HTML \u2014 no auto header/footer chrome. |",
                 "enum": [
                     "classic",
                     "modern",
-                    "minimal"
+                    "minimal",
+                    "none"
                 ],
                 "title": "TemplateLayoutStyle"
             },
@@ -19070,7 +19299,7 @@
                     },
                     "payload": {
                         "type": "array",
-                        "description": "Provider-specific payload.",
+                        "description": "Customer-safe event details. Never includes raw provider infrastructure metadata.",
                         "items": {}
                     },
                     "occurred_at": {
@@ -19336,6 +19565,7 @@
                             },
                             "rules": {
                                 "type": "array",
+                                "description": "`present` allows an empty rule tree (e.g. All Contacts); `required` would reject [].",
                                 "items": {
                                     "type": "object",
                                     "description": "A single condition (`field`, `operator`, `value`) or a nested rule group.",
@@ -19355,7 +19585,11 @@
                                     "additionalProperties": true
                                 }
                             }
-                        }
+                        },
+                        "required": [
+                            "logic",
+                            "rules"
+                        ]
                     }
                 },
                 "title": "UpdateSegmentRequest"
@@ -19365,12 +19599,20 @@
                 "properties": {
                     "name": {
                         "type": "string",
+                        "description": "Updated project-unique tag name. Tags do not support a `description` field.",
+                        "examples": [
+                            "vip"
+                        ],
                         "maxLength": 255
                     },
                     "color": {
                         "type": [
                             "string",
                             "null"
+                        ],
+                        "description": "Updated display color in hex notation; null clears it.",
+                        "examples": [
+                            "#111827"
                         ],
                         "maxLength": 16
                     }

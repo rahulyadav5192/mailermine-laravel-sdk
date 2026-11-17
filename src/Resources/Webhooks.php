@@ -366,27 +366,118 @@ final class Webhooks extends BaseResource
     }
 
     /**
+     * Default maximum age, in seconds, of a signed webhook timestamp.
+     */
+    public const DEFAULT_TOLERANCE = 300;
+
+    /**
      * Verify a webhook signature locally.
      *
-     * MailerMine signs payloads with HMAC-SHA256 using the webhook signing
-     * secret. Accepts either the raw hex digest or a `sha256=` prefixed value.
+     * MailerMine signs `{timestamp}.{raw_body}` with HMAC-SHA256 using the
+     * webhook signing secret, and sends the timestamp in `X-MailerMine-Timestamp`
+     * and the signature in `X-MailerMine-Signature` (`sha256=<hex>`). Pass the
+     * timestamp so the signature matches and old deliveries are rejected
+     * (replay protection). Prefer {@see Webhooks::verifyHeaders()}.
      *
-     * @param  string  $payload  Raw request body.
-     * @param  string  $signature  Signature header value.
+     * @param  string  $payload  Raw request body (exactly as received).
+     * @param  string  $signature  `X-MailerMine-Signature` header value (hex, optionally `sha256=` prefixed).
      * @param  string  $secret  Webhook signing secret.
-     * @return bool True when the signature is valid.
+     * @param  string|int|null  $timestamp  `X-MailerMine-Timestamp` header value. Without it, only a
+     *                                      body-only signature is checked (legacy behaviour, no replay protection).
+     * @param  int  $tolerance  Maximum age of the timestamp in seconds (0 disables the check).
+     * @return bool True when the signature is valid (and the timestamp is fresh).
      *
      * @example
-     * $valid = Webhooks::verify($rawBody, $_SERVER['HTTP_X_MAILERMINE_SIGNATURE'], $secret);
+     * $valid = Webhooks::verify(
+     *     $request->getContent(),
+     *     $request->header('X-MailerMine-Signature'),
+     *     config('services.mailermine.webhook_secret'),
+     *     $request->header('X-MailerMine-Timestamp'),
+     * );
      */
-    public static function verify(string $payload, string $signature, string $secret): bool
-    {
-        $expected = hash_hmac('sha256', $payload, $secret);
-        $normalized = str_starts_with(strtolower($signature), 'sha256=')
-            ? substr($signature, 7)
-            : $signature;
+    public static function verify(
+        string $payload,
+        string $signature,
+        string $secret,
+        string|int|null $timestamp = null,
+        int $tolerance = self::DEFAULT_TOLERANCE,
+    ): bool {
+        if ($secret === '' || $signature === '') {
+            return false;
+        }
 
-        return hash_equals($expected, $normalized);
+        $normalized = strtolower(trim($signature));
+        $normalized = str_starts_with($normalized, 'sha256=') ? substr($normalized, 7) : $normalized;
+
+        if ($timestamp === null || $timestamp === '') {
+            return hash_equals(hash_hmac('sha256', $payload, $secret), $normalized);
+        }
+
+        if (!is_numeric($timestamp)) {
+            return false;
+        }
+
+        $timestamp = (int) $timestamp;
+
+        if ($tolerance > 0 && abs(time() - $timestamp) > $tolerance) {
+            return false;
+        }
+
+        return hash_equals(hash_hmac('sha256', $timestamp.'.'.$payload, $secret), $normalized);
+    }
+
+    /**
+     * Verify a webhook using its request headers.
+     *
+     * Reads `X-MailerMine-Signature` and `X-MailerMine-Timestamp` (falling back
+     * to the legacy `X-Relay-*` headers) case-insensitively.
+     *
+     * @param  string  $payload  Raw request body.
+     * @param  array<string, string|list<string>>  $headers  Request headers, e.g. `$request->headers->all()`.
+     * @param  string  $secret  Webhook signing secret.
+     *
+     * @example
+     * if (! Webhooks::verifyHeaders($request->getContent(), $request->headers->all(), $secret)) {
+     *     abort(401);
+     * }
+     */
+    public static function verifyHeaders(
+        string $payload,
+        array $headers,
+        string $secret,
+        int $tolerance = self::DEFAULT_TOLERANCE,
+    ): bool {
+        $signature = self::headerValue($headers, ['X-MailerMine-Signature', 'X-Relay-Signature']);
+        $timestamp = self::headerValue($headers, ['X-MailerMine-Timestamp', 'X-Relay-Timestamp']);
+
+        if ($signature === null || $timestamp === null) {
+            return false;
+        }
+
+        return self::verify($payload, $signature, $secret, $timestamp, $tolerance);
+    }
+
+    /**
+     * @param  array<string, mixed>  $headers
+     * @param  list<string>  $names
+     */
+    private static function headerValue(array $headers, array $names): ?string
+    {
+        foreach ($names as $name) {
+            foreach ($headers as $key => $value) {
+                if (strcasecmp(str_replace('_', '-', (string) $key), $name) !== 0) {
+                    continue;
+                }
+
+                $value = is_array($value) ? ($value[0] ?? null) : $value;
+
+                if (is_scalar($value) && (string) $value !== '') {
+                    return (string) $value;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**

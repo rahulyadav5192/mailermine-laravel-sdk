@@ -2,7 +2,7 @@
 
 Manage static contact lists and list memberships.
 
-All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation defines another base path.
+All URIs are relative to https://mailermine.com/api/v1, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
@@ -15,7 +15,7 @@ All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation d
 | [**listLists()**](ListsApi.md#listLists) | **GET** /lists | List contact lists |
 | [**removeContactsFromList()**](ListsApi.md#removeContactsFromList) | **DELETE** /lists/{list}/contacts | Remove contacts from list |
 | [**removeContactsFromListLegacy()**](ListsApi.md#removeContactsFromListLegacy) | **POST** /lists/{list}/contacts/remove | Remove contacts from list |
-| [**updateList()**](ListsApi.md#updateList) | **PATCH** /lists/{list} | Update contact list |
+| [**updateList()**](ListsApi.md#updateList) | **PUT** /lists/{list} | Update contact list |
 
 
 ## `addContactsToList()`

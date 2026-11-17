@@ -2,7 +2,7 @@
 
 Manage dynamic, rule-based contact segments.
 
-All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation defines another base path.
+All URIs are relative to https://mailermine.com/api/v1, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
@@ -13,7 +13,7 @@ All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation d
 | [**listSegments()**](SegmentsApi.md#listSegments) | **GET** /segments | List segments |
 | [**previewSegment()**](SegmentsApi.md#previewSegment) | **POST** /segments/{segment}/preview | Preview segment |
 | [**previewSegmentRules()**](SegmentsApi.md#previewSegmentRules) | **POST** /segments/preview | Preview segment rules |
-| [**updateSegment()**](SegmentsApi.md#updateSegment) | **PATCH** /segments/{segment} | Update segment |
+| [**updateSegment()**](SegmentsApi.md#updateSegment) | **PUT** /segments/{segment} | Update segment |
 
 
 ## `countSegment()`
@@ -487,7 +487,7 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **segment** | **string**| Segment UUID. | |
-| **update_segment_request** | [**\OpenAPI\Client\Model\UpdateSegmentRequest**](../Model/UpdateSegmentRequest.md)|  | [optional] |
+| **update_segment_request** | [**\OpenAPI\Client\Model\UpdateSegmentRequest**](../Model/UpdateSegmentRequest.md)|  | |
 
 ### Return type
 

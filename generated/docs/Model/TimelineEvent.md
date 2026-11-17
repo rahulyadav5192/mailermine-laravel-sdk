@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **event_type** | **string** | Machine-readable event type, e.g. &#x60;sent&#x60;, &#x60;delivered&#x60;, &#x60;bounced&#x60;. |
 **event_label** | **string** |  |
 **source** | **string** |  |
-**payload** | **mixed[]** | Provider-specific payload. |
+**payload** | **mixed[]** | Customer-safe event details. Never includes raw provider infrastructure metadata. |
 **occurred_at** | **string** | When the event occurred (ISO-8601). |
 **message_id** | **string** |  |
 **recipient** | **string** |  |

@@ -320,7 +320,7 @@ class CreateTagRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets name
      *
-     * @param string $name name
+     * @param string $name Project-unique tag name. Tags do not support a `description` field.
      *
      * @return self
      */
@@ -351,7 +351,7 @@ class CreateTagRequest implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets color
      *
-     * @param string|null $color color
+     * @param string|null $color Optional display color in hex notation.
      *
      * @return self
      */

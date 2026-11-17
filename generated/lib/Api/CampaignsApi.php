@@ -1731,7 +1731,7 @@ class CampaignsApi
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\CampaignPreviewResponse|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject
+     * @return \OpenAPI\Client\Model\CampaignPreviewResponse|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject
      */
     public function previewCampaign($campaign, string $contentType = self::contentTypes['previewCampaign'][0])
     {
@@ -1749,7 +1749,7 @@ class CampaignsApi
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\CampaignPreviewResponse|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\CampaignPreviewResponse|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject, HTTP status code, HTTP response headers (array of strings)
      */
     public function previewCampaignWithHttpInfo($campaign, string $contentType = self::contentTypes['previewCampaign'][0])
     {
@@ -1785,6 +1785,12 @@ class CampaignsApi
                         $request,
                         $response,
                     );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\InlineObject1',
+                        $request,
+                        $response,
+                    );
                 case 400:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
@@ -1812,12 +1818,6 @@ class CampaignsApi
                 case 409:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
-                        $request,
-                        $response,
-                    );
-                case 422:
-                    return $this->handleResponseWithDataType(
-                        '\OpenAPI\Client\Model\InlineObject1',
                         $request,
                         $response,
                     );
@@ -1865,6 +1865,14 @@ class CampaignsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\InlineObject1',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 400:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -1901,14 +1909,6 @@ class CampaignsApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\OpenAPI\Client\Model\InlineObject',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    throw $e;
-                case 422:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\InlineObject1',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);

@@ -33,6 +33,7 @@ use \OpenAPI\Client\ObjectSerializer;
  * TemplateLayoutStyle Class Doc Comment
  *
  * @category Class
+ * @description | | |---| | &#x60;classic&#x60; &lt;br/&gt;  | | &#x60;modern&#x60; &lt;br/&gt;  | | &#x60;minimal&#x60; &lt;br/&gt;  | | &#x60;none&#x60; &lt;br/&gt; Email Studio / full custom HTML — no auto header/footer chrome. |
  * @package  OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
@@ -48,6 +49,8 @@ class TemplateLayoutStyle
 
     public const MINIMAL = 'minimal';
 
+    public const NONE = 'none';
+
     /**
      * Gets allowable values of the enum
      * @return string[]
@@ -57,7 +60,8 @@ class TemplateLayoutStyle
         return [
             self::CLASSIC,
             self::MODERN,
-            self::MINIMAL
+            self::MINIMAL,
+            self::NONE
         ];
     }
 }

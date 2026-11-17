@@ -296,6 +296,9 @@ class UpdateSegmentRequestRules implements ModelInterface, ArrayAccess, \JsonSer
     {
         $invalidProperties = [];
 
+        if ($this->container['logic'] === null) {
+            $invalidProperties[] = "'logic' can't be null";
+        }
         $allowedValues = $this->getLogicAllowableValues();
         if (!is_null($this->container['logic']) && !in_array($this->container['logic'], $allowedValues, true)) {
             $invalidProperties[] = sprintf(
@@ -305,6 +308,9 @@ class UpdateSegmentRequestRules implements ModelInterface, ArrayAccess, \JsonSer
             );
         }
 
+        if ($this->container['rules'] === null) {
+            $invalidProperties[] = "'rules' can't be null";
+        }
         return $invalidProperties;
     }
 
@@ -323,7 +329,7 @@ class UpdateSegmentRequestRules implements ModelInterface, ArrayAccess, \JsonSer
     /**
      * Gets logic
      *
-     * @return string|null
+     * @return string
      */
     public function getLogic()
     {
@@ -333,7 +339,7 @@ class UpdateSegmentRequestRules implements ModelInterface, ArrayAccess, \JsonSer
     /**
      * Sets logic
      *
-     * @param string|null $logic logic
+     * @param string $logic logic
      *
      * @return self
      */
@@ -360,7 +366,7 @@ class UpdateSegmentRequestRules implements ModelInterface, ArrayAccess, \JsonSer
     /**
      * Gets rules
      *
-     * @return \OpenAPI\Client\Model\PreviewSegmentRequestRulesRulesInner[]|null
+     * @return \OpenAPI\Client\Model\PreviewSegmentRequestRulesRulesInner[]
      */
     public function getRules()
     {
@@ -370,7 +376,7 @@ class UpdateSegmentRequestRules implements ModelInterface, ArrayAccess, \JsonSer
     /**
      * Sets rules
      *
-     * @param \OpenAPI\Client\Model\PreviewSegmentRequestRulesRulesInner[]|null $rules rules
+     * @param \OpenAPI\Client\Model\PreviewSegmentRequestRulesRulesInner[] $rules `present` allows an empty rule tree (e.g. All Contacts); `required` would reject [].
      *
      * @return self
      */

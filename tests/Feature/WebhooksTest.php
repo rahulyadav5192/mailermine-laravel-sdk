@@ -121,6 +121,52 @@ final class WebhooksTest extends TestCase
         self::assertFalse(Webhooks::verify($payload, 'invalid', $secret));
     }
 
+    public function test_verify_matches_the_server_signing_scheme(): void
+    {
+        $payload = '{"type":"email.delivered","data":{"id":"msg_1"}}';
+        $secret = 'whsec_test';
+        $timestamp = time();
+        // Exactly what the MailerMine server sends (WebhookSigningService).
+        $signature = 'sha256='.hash_hmac('sha256', $timestamp.'.'.$payload, $secret);
+
+        self::assertTrue(Webhooks::verify($payload, $signature, $secret, (string) $timestamp));
+        self::assertTrue(Webhooks::verifyHeaders($payload, [
+            'x-mailermine-signature' => [$signature],
+            'x-mailermine-timestamp' => [(string) $timestamp],
+        ], $secret));
+
+        // Tampered body, wrong secret, wrong timestamp.
+        self::assertFalse(Webhooks::verify($payload.' ', $signature, $secret, $timestamp));
+        self::assertFalse(Webhooks::verify($payload, $signature, 'other', $timestamp));
+        self::assertFalse(Webhooks::verify($payload, $signature, $secret, $timestamp + 1));
+        // Missing headers.
+        self::assertFalse(Webhooks::verifyHeaders($payload, [], $secret));
+    }
+
+    public function test_verify_rejects_stale_timestamps(): void
+    {
+        $payload = '{}';
+        $secret = 'whsec_test';
+        $old = time() - 3600;
+        $signature = hash_hmac('sha256', $old.'.'.$payload, $secret);
+
+        self::assertFalse(Webhooks::verify($payload, $signature, $secret, $old));
+        self::assertTrue(Webhooks::verify($payload, $signature, $secret, $old, tolerance: 0));
+    }
+
+    public function test_verify_headers_accepts_legacy_relay_headers(): void
+    {
+        $payload = '{}';
+        $secret = 'whsec_test';
+        $timestamp = (string) time();
+        $signature = 'sha256='.hash_hmac('sha256', $timestamp.'.'.$payload, $secret);
+
+        self::assertTrue(Webhooks::verifyHeaders($payload, [
+            'X-Relay-Signature' => $signature,
+            'X-Relay-Timestamp' => $timestamp,
+        ], $secret));
+    }
+
     public function test_validation_exception_is_mapped(): void
     {
         $history = [];

@@ -200,7 +200,7 @@ abstract class BaseResource
             throw ExceptionFactory::fromGenerated($exception);
         }
 
-        return Response::from($body);
+        return Response::from($body, $response->getHeaders());
     }
 
     private function normalizeRawHttpResponse(ResponseInterface $response): Response

@@ -49,8 +49,10 @@ use MailerMine\Resources\Webhooks;
 
 $payload   = file_get_contents('php://input');
 $signature = $_SERVER['HTTP_X_MAILERMINE_SIGNATURE'] ?? '';
+$timestamp = $_SERVER['HTTP_X_MAILERMINE_TIMESTAMP'] ?? '';
 
-if (! Webhooks::verify($payload, $signature, $secret)) {
+// MailerMine signs "{timestamp}.{body}"; deliveries older than 5 minutes are rejected.
+if (! Webhooks::verify($payload, $signature, $secret, $timestamp)) {
     http_response_code(401);
     exit;
 }
@@ -67,9 +69,9 @@ use MailerMine\Resources\Webhooks;
 public function handle(Request $request)
 {
     abort_unless(
-        Webhooks::verify(
+        Webhooks::verifyHeaders(
             $request->getContent(),
-            $request->header('X-MailerMine-Signature', ''),
+            $request->headers->all(),
             config('services.mailermine.webhook_secret'),
         ),
         401,

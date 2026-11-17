@@ -1048,12 +1048,6 @@ class MessagesApi
                         $request,
                         $response,
                     );
-                case 404:
-                    return $this->handleResponseWithDataType(
-                        '\OpenAPI\Client\Model\InlineObject',
-                        $request,
-                        $response,
-                    );
                 case 401:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
@@ -1061,6 +1055,12 @@ class MessagesApi
                         $response,
                     );
                 case 403:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\InlineObject',
+                        $request,
+                        $response,
+                    );
+                case 404:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
                         $request,
@@ -1128,14 +1128,6 @@ class MessagesApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
-                case 404:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\InlineObject',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    throw $e;
                 case 401:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -1145,6 +1137,14 @@ class MessagesApi
                     $e->setResponseObject($data);
                     throw $e;
                 case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\InlineObject',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\OpenAPI\Client\Model\InlineObject',

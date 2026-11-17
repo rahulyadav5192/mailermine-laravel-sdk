@@ -483,7 +483,7 @@ class CampaignEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets payload
      *
-     * @param mixed[]|null $payload Provider/event metadata. @var array<string, mixed>|null
+     * @param mixed[]|null $payload Customer-safe event details. @var array<string, mixed>|null
      *
      * @return self
      */
