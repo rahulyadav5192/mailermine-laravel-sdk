@@ -90,6 +90,22 @@ class ApiException extends Exception
     }
 
     /**
+     * Rate-limit state from the error response headers, when present.
+     */
+    public function rateLimit(): ?\MailerMine\Support\RateLimit
+    {
+        return \MailerMine\Support\RateLimit::fromHeaders($this->headers);
+    }
+
+    /**
+     * Whether retrying the same request later may succeed (429 and 5xx).
+     */
+    public function isRetryable(): bool
+    {
+        return $this->statusCode === 429 || $this->statusCode >= 500;
+    }
+
+    /**
      * Whether this is a 4xx client error.
      */
     public function isClientError(): bool

@@ -55,7 +55,6 @@ final class Emails extends BaseResource
      *     headers?: array<string, string>,
      *     attachments?: list<array{filename: string, content: string, content_type?: string|null}>
      * } $parameters Email fields supported by the MailerMine API.
-     * @return Response A clean SDK response containing the queued message.
      *
      * @example
      * $email = $mm->emails()->send([
@@ -66,17 +65,30 @@ final class Emails extends BaseResource
      * ]);
      *
      * echo $email->data()['uuid'];
+     *
+     * // Safe to retry from your own code/queue: the same key never sends twice.
+     * $mm->emails()->send([...], ['idempotency_key' => 'order-'.$order->id]);
+     *
+     * @param  array{idempotency_key?: string}  $options  Request options. Without an
+     *                                                    `idempotency_key` a random one is generated, so the SDK's own retries
+     *                                                    are safe; pass your own to make retries across processes safe too.
+     * @return Response A clean SDK response containing the queued message.
      */
-    public function send(array $parameters): Response
+    public function send(array $parameters, array $options = []): Response
     {
         $request = RequestBuilder::make(
             SendEmailRequest::class,
             $this->normalizeSendParameters($parameters),
         );
 
-        return $this->executeRequest(
-            $this->emailsApi()->sendEmailRequest($request)
-        );
+        $key = $options['idempotency_key'] ?? null;
+
+        if ($key !== null && (!is_string($key) || $key === '' || strlen($key) > 255)) {
+            throw new InvalidArgumentException('idempotency_key must be a non-empty string of at most 255 characters.');
+        }
+
+        // Without a caller key, HttpStack adds a random one so SDK retries stay safe.
+        return $this->executeRequest($this->emailsApi()->sendEmailRequest($request, $key));
     }
 
     /**

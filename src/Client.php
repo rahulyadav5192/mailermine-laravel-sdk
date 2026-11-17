@@ -8,6 +8,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\ClientInterface;
 use MailerMine\Config\Configuration;
 use MailerMine\Contracts\ClientContract;
+use MailerMine\Http\HttpStack;
 use MailerMine\Resources\Analytics;
 use MailerMine\Resources\ApiKeys;
 use MailerMine\Resources\Audiences;
@@ -40,7 +41,7 @@ final class Client implements ClientContract
     /**
      * Current SDK version (SemVer).
      */
-    public const VERSION = '1.0.0';
+    public const VERSION = '1.1.0';
 
     private readonly Configuration $configuration;
 
@@ -100,9 +101,12 @@ final class Client implements ClientContract
 
         $this->generatedConfiguration = $this->configuration->toGenerated();
 
+        // A custom $httpClient is used as-is: add HttpStack::create() to its
+        // handler if you want the SDK's retries and idempotency keys.
         $this->httpClient = $httpClient ?? new GuzzleClient([
+            'handler' => HttpStack::create($this->configuration),
             'timeout' => $this->configuration->timeout(),
-            'connect_timeout' => $this->configuration->timeout(),
+            'connect_timeout' => min(10.0, $this->configuration->timeout()),
             'http_errors' => false,
         ]);
     }

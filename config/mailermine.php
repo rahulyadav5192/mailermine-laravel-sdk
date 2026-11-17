@@ -39,4 +39,20 @@ return [
 
     'timeout' => (float) env('MAILERMINE_TIMEOUT', 30),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Retries
+    |--------------------------------------------------------------------------
+    |
+    | Rate-limited (429) and temporarily unavailable (502/503/504) responses
+    | and connection failures are retried with backoff, honouring the API's
+    | Retry-After header. Email sends carry an Idempotency-Key, so a retry is
+    | never delivered twice. Set max_retries to 0 to disable.
+    |
+    */
+
+    'max_retries' => (int) env('MAILERMINE_MAX_RETRIES', 2),
+
+    'max_retry_delay' => (float) env('MAILERMINE_MAX_RETRY_DELAY', 30),
+
 ];

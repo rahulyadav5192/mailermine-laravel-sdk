@@ -31,6 +31,15 @@ final class ExceptionFactory
                 responseObject: $object,
                 previous: $exception,
             ),
+            $statusCode === 403 && self::extractMissingScopes($body, $object) !== [] => new MissingScopeException(
+                message: $message !== '' ? $message : 'This API key is missing a required scope.',
+                statusCode: $statusCode,
+                responseBody: $body,
+                headers: $headers,
+                responseObject: $object,
+                missingScopes: self::extractMissingScopes($body, $object),
+                previous: $exception,
+            ),
             $statusCode === 403 => new PlanException(
                 message: self::planMessage($message),
                 statusCode: $statusCode,
@@ -153,6 +162,24 @@ final class ExceptionFactory
         }
 
         return null;
+    }
+
+    /**
+     * Scopes listed in a 403 response's `errors.scope`, if any.
+     *
+     * @return list<string>
+     */
+    private static function extractMissingScopes(mixed $body, mixed $object): array
+    {
+        $scopes = self::extractErrors($body, $object)['scope'] ?? [];
+
+        if (is_string($scopes)) {
+            $scopes = [$scopes];
+        }
+
+        return is_array($scopes)
+            ? array_values(array_filter($scopes, static fn (mixed $s): bool => is_string($s) && $s !== ''))
+            : [];
     }
 
     /**

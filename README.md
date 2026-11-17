@@ -117,7 +117,30 @@ return [
     'api_key'  => env('MAILERMINE_API_KEY'),
     'base_url' => env('MAILERMINE_BASE_URL', 'https://mailermine.com/api/v1'),
     'timeout'  => (float) env('MAILERMINE_TIMEOUT', 30),
+    'max_retries' => (int) env('MAILERMINE_MAX_RETRIES', 2),
+    'max_retry_delay' => (float) env('MAILERMINE_MAX_RETRY_DELAY', 30),
 ];
+```
+
+### Retries, rate limits and idempotency
+
+Rate-limited (429) and temporarily unavailable (502/503/504) responses and
+connection failures are retried automatically with backoff, honouring the
+API's `Retry-After` header. Email sends always carry an `Idempotency-Key`, so a
+retry is never delivered twice. Pass your own key to make retries from your
+queue or another process safe too:
+
+```php
+$mm->emails()->send([...], ['idempotency_key' => 'order-'.$order->id.'-receipt']);
+```
+
+Every response exposes the current rate-limit state:
+
+```php
+$response = $mm->emails()->send([...]);
+$response->rateLimit()?->remaining;   // requests left in this window
+$response->rateLimit()?->resetsAt;    // DateTimeImmutable
+$response->wasIdempotentReplay();     // true if the API replayed a stored response
 ```
 
 For advanced configuration in any environment, build a `Configuration` object:
@@ -132,6 +155,8 @@ $config = new Configuration(
     timeout: 30.0,
     userAgent: 'my-app/1.0',
     debug: false,
+    maxRetries: 2,        // 0 disables retries
+    maxRetryDelay: 30.0,  // longest single wait, in seconds
 );
 
 $mm = new Client($config);
@@ -488,8 +513,10 @@ use MailerMine\Resources\Webhooks;
 
 $payload   = file_get_contents('php://input');
 $signature = $_SERVER['HTTP_X_MAILERMINE_SIGNATURE'] ?? '';
+$timestamp = $_SERVER['HTTP_X_MAILERMINE_TIMESTAMP'] ?? '';
 
-if (! Webhooks::verify($payload, $signature, $secret)) {
+// MailerMine signs "{timestamp}.{body}"; deliveries older than 5 minutes are rejected.
+if (! Webhooks::verify($payload, $signature, $secret, $timestamp)) {
     http_response_code(401);
     exit;
 }
@@ -505,9 +532,9 @@ use MailerMine\Resources\Webhooks;
 
 public function handle(Request $request)
 {
-    $valid = Webhooks::verify(
+    $valid = Webhooks::verifyHeaders(
         $request->getContent(),
-        $request->header('X-MailerMine-Signature', ''),
+        $request->headers->all(),
         config('services.mailermine.webhook_secret'),
     );
 
@@ -598,6 +625,7 @@ The SDK maps API failures to typed exceptions, all extending `ApiException`:
 | Exception                 | HTTP status | When                                            |
 | ------------------------- | ----------- | ----------------------------------------------- |
 | `AuthenticationException` | 401         | Missing or invalid API key                      |
+| `MissingScopeException`   | 403         | API key lacks a required scope (`getMissingScopes()`) |
 | `PlanException`           | 403         | Feature not on your plan, or account restricted |
 | `NotFoundException`       | 404         | Resource does not exist                         |
 | `ValidationException`     | 422         | Invalid request data (server- or client-side)   |
@@ -611,6 +639,7 @@ handles them all, and `$e->getRequestId()` returns the MailerMine request ID
 ```php
 use MailerMine\Exceptions\ApiException;
 use MailerMine\Exceptions\AuthenticationException;
+use MailerMine\Exceptions\MissingScopeException;
 use MailerMine\Exceptions\PlanException;
 use MailerMine\Exceptions\RateLimitException;
 use MailerMine\Exceptions\ValidationException;
@@ -622,11 +651,15 @@ try {
     foreach ($e->getErrors() as $field => $messages) {
         // ...
     }
+} catch (MissingScopeException $e) {
+    // The key is valid but not allowed to do this, e.g. ['domains.read'].
+    $e->getMissingScopes();
 } catch (PlanException $e) {
     // The action isn't available on the current plan.
     // $e->getMessage() already includes actionable upgrade guidance.
     return redirect()->away($e->getUpgradeUrl());
 } catch (RateLimitException $e) {
+    // Raised after automatic retries are used up.
     $retryAfter = $e->getRetryAfter(); // seconds, or null
 } catch (AuthenticationException $e) {
     // The API key is missing or incorrect.

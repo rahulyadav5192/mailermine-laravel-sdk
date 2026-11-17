@@ -11,7 +11,11 @@ use InvalidArgumentException;
  */
 final class Configuration
 {
-    public const DEFAULT_USER_AGENT = 'mailermine-php/1.0.0';
+    public const DEFAULT_USER_AGENT = 'mailermine-php/1.1.0';
+
+    public const DEFAULT_MAX_RETRIES = 2;
+
+    public const DEFAULT_MAX_RETRY_DELAY = 30.0;
 
     public const DEFAULT_BASE_URL = 'https://mailermine.com/api/v1';
 
@@ -21,6 +25,8 @@ final class Configuration
         private readonly float $timeout = 30.0,
         private readonly string $userAgent = self::DEFAULT_USER_AGENT,
         private readonly bool $debug = false,
+        private readonly int $maxRetries = self::DEFAULT_MAX_RETRIES,
+        private readonly float $maxRetryDelay = self::DEFAULT_MAX_RETRY_DELAY,
     ) {
         if ($this->apiKey === '') {
             throw new InvalidArgumentException('MailerMine API key must not be empty.');
@@ -28,6 +34,14 @@ final class Configuration
 
         if ($this->timeout <= 0) {
             throw new InvalidArgumentException('MailerMine timeout must be greater than zero.');
+        }
+
+        if ($this->maxRetries < 0) {
+            throw new InvalidArgumentException('MailerMine max retries must be zero or greater.');
+        }
+
+        if ($this->maxRetryDelay < 0) {
+            throw new InvalidArgumentException('MailerMine max retry delay must be zero or greater.');
         }
     }
 
@@ -56,6 +70,12 @@ final class Configuration
                     ? $config['userAgent']
                     : self::DEFAULT_USER_AGENT),
             debug: (bool) ($config['debug'] ?? false),
+            maxRetries: isset($config['max_retries']) && is_numeric($config['max_retries'])
+                ? (int) $config['max_retries']
+                : (isset($config['maxRetries']) && is_numeric($config['maxRetries']) ? (int) $config['maxRetries'] : self::DEFAULT_MAX_RETRIES),
+            maxRetryDelay: isset($config['max_retry_delay']) && is_numeric($config['max_retry_delay'])
+                ? (float) $config['max_retry_delay']
+                : self::DEFAULT_MAX_RETRY_DELAY,
         );
     }
 
@@ -97,6 +117,23 @@ final class Configuration
     public function debug(): bool
     {
         return $this->debug;
+    }
+
+    /**
+     * How many times a failed request is retried (0 disables retries).
+     */
+    public function maxRetries(): int
+    {
+        return $this->maxRetries;
+    }
+
+    /**
+     * The longest single wait between retries, in seconds. A 429 asking the
+     * client to wait longer than this is surfaced as a RateLimitException.
+     */
+    public function maxRetryDelay(): float
+    {
+        return $this->maxRetryDelay;
     }
 
     /**
