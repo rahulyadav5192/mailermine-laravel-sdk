@@ -2,7 +2,7 @@
 
 Read the unified list-and-segment audience catalog.
 
-All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation defines another base path.
+All URIs are relative to https://mailermine.com/api/v1, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |

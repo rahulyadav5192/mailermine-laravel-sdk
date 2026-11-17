@@ -503,7 +503,7 @@ class TimelineEvent implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets payload
      *
-     * @param mixed[] $payload Provider-specific payload.
+     * @param mixed[] $payload Customer-safe event details. Never includes raw provider infrastructure metadata.
      *
      * @return self
      */

@@ -93,7 +93,7 @@ class Configuration
      *
      * @var string
      */
-    protected $host = 'http://127.0.0.1:8000/api/v1';
+    protected $host = 'https://mailermine.com/api/v1';
 
     /**
      * User agent of the HTTP request, set to "OpenAPI-Generator/{version}/PHP" by default
@@ -529,7 +529,7 @@ class Configuration
     {
         return [
             [
-                "url" => "http://127.0.0.1:8000/api/v1",
+                "url" => "https://mailermine.com/api/v1",
                 "description" => "MailerMine API v1",
             ]
         ];

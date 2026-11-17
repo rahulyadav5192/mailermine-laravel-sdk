@@ -131,15 +131,16 @@ class EmailsApi
      * Send email
      *
      * @param  \OpenAPI\Client\Model\SendEmailRequest $send_email_request send_email_request (required)
+     * @param  string|null $idempotency_key Optional unique key (max 255 chars). Retrying with the same key and body returns the original response instead of sending again; the same key with a different body returns 422. Keys are kept for 24 hours. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['sendEmail'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return \OpenAPIClientModelSendEmailResponse|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject
      */
-    public function sendEmail($send_email_request, string $contentType = self::contentTypes['sendEmail'][0])
+    public function sendEmail($send_email_request, $idempotency_key = null, string $contentType = self::contentTypes['sendEmail'][0])
     {
-        list($response) = $this->sendEmailWithHttpInfo($send_email_request, $contentType);
+        list($response) = $this->sendEmailWithHttpInfo($send_email_request, $idempotency_key, $contentType);
         return $response;
     }
 
@@ -149,15 +150,16 @@ class EmailsApi
      * Send email
      *
      * @param  \OpenAPI\Client\Model\SendEmailRequest $send_email_request (required)
+     * @param  string|null $idempotency_key Optional unique key (max 255 chars). Retrying with the same key and body returns the original response instead of sending again; the same key with a different body returns 422. Keys are kept for 24 hours. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['sendEmail'] to see the possible values for this operation
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of \OpenAPIClientModelSendEmailResponse|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject, HTTP status code, HTTP response headers (array of strings)
      */
-    public function sendEmailWithHttpInfo($send_email_request, string $contentType = self::contentTypes['sendEmail'][0])
+    public function sendEmailWithHttpInfo($send_email_request, $idempotency_key = null, string $contentType = self::contentTypes['sendEmail'][0])
     {
-        $request = $this->sendEmailRequest($send_email_request, $contentType);
+        $request = $this->sendEmailRequest($send_email_request, $idempotency_key, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -195,6 +197,12 @@ class EmailsApi
                         $request,
                         $response,
                     );
+                case 409:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\InlineObject',
+                        $request,
+                        $response,
+                    );
                 case 400:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
@@ -226,12 +234,6 @@ class EmailsApi
                         $response,
                     );
                 case 404:
-                    return $this->handleResponseWithDataType(
-                        '\OpenAPI\Client\Model\InlineObject',
-                        $request,
-                        $response,
-                    );
-                case 409:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
                         $request,
@@ -277,6 +279,14 @@ class EmailsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 409:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\InlineObject',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 400:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -325,14 +335,6 @@ class EmailsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
-                case 409:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\InlineObject',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    throw $e;
             }
         
 
@@ -346,14 +348,15 @@ class EmailsApi
      * Send email
      *
      * @param  \OpenAPI\Client\Model\SendEmailRequest $send_email_request (required)
+     * @param  string|null $idempotency_key Optional unique key (max 255 chars). Retrying with the same key and body returns the original response instead of sending again; the same key with a different body returns 422. Keys are kept for 24 hours. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['sendEmail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function sendEmailAsync($send_email_request, string $contentType = self::contentTypes['sendEmail'][0])
+    public function sendEmailAsync($send_email_request, $idempotency_key = null, string $contentType = self::contentTypes['sendEmail'][0])
     {
-        return $this->sendEmailAsyncWithHttpInfo($send_email_request, $contentType)
+        return $this->sendEmailAsyncWithHttpInfo($send_email_request, $idempotency_key, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -367,15 +370,16 @@ class EmailsApi
      * Send email
      *
      * @param  \OpenAPI\Client\Model\SendEmailRequest $send_email_request (required)
+     * @param  string|null $idempotency_key Optional unique key (max 255 chars). Retrying with the same key and body returns the original response instead of sending again; the same key with a different body returns 422. Keys are kept for 24 hours. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['sendEmail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function sendEmailAsyncWithHttpInfo($send_email_request, string $contentType = self::contentTypes['sendEmail'][0])
+    public function sendEmailAsyncWithHttpInfo($send_email_request, $idempotency_key = null, string $contentType = self::contentTypes['sendEmail'][0])
     {
         $returnType = '\OpenAPI\Client\Model\SendEmailResponse';
-        $request = $this->sendEmailRequest($send_email_request, $contentType);
+        $request = $this->sendEmailRequest($send_email_request, $idempotency_key, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -417,12 +421,13 @@ class EmailsApi
      * Create request for operation 'sendEmail'
      *
      * @param  \OpenAPI\Client\Model\SendEmailRequest $send_email_request (required)
+     * @param  string|null $idempotency_key Optional unique key (max 255 chars). Retrying with the same key and body returns the original response instead of sending again; the same key with a different body returns 422. Keys are kept for 24 hours. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['sendEmail'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function sendEmailRequest($send_email_request, string $contentType = self::contentTypes['sendEmail'][0])
+    public function sendEmailRequest($send_email_request, $idempotency_key = null, string $contentType = self::contentTypes['sendEmail'][0])
     {
 
         // verify the required parameter 'send_email_request' is set
@@ -433,6 +438,7 @@ class EmailsApi
         }
 
 
+
         $resourcePath = '/emails';
         $formParams = [];
         $queryParams = [];
@@ -441,6 +447,10 @@ class EmailsApi
         $multipart = false;
 
 
+        // header params
+        if ($idempotency_key !== null) {
+            $headerParams['Idempotency-Key'] = ObjectSerializer::toHeaderValue($idempotency_key);
+        }
 
 
 

@@ -638,7 +638,7 @@ class ProjectResource implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets status
      *
-     * @param string $status Project lifecycle status. @var 'active'|'archived' @example active
+     * @param string $status Project lifecycle status. @var 'active'|'archived'|'inactive' @example active
      *
      * @return self
      */

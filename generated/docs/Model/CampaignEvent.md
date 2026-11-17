@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **event_type** | **string** | Delivery or engagement event type. @example clicked |
 **event_label** | **string** |  |
 **source** | **string** | Event ingestion source. |
-**payload** | **mixed[]** | Provider/event metadata. @var array&lt;string, mixed&gt;|null |
+**payload** | **mixed[]** | Customer-safe event details. @var array&lt;string, mixed&gt;|null |
 **occurred_at** | **string** | Provider occurrence time. @format date-time |
 **created_at** | **string** | Event persistence time. @format date-time |
 **message_uuid** | **string** | Related message UUID when loaded. @format uuid |

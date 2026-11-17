@@ -2,7 +2,7 @@
 
 Query recipient delivery and engagement events across the project.
 
-All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation defines another base path.
+All URIs are relative to https://mailermine.com/api/v1, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
@@ -101,7 +101,7 @@ $event_type = delivered; // string | Filter by event type (for example `delivere
 $source = transactional; // string | Filter by event source.
 $campaign = 'campaign_example'; // string | Filter by campaign UUID.
 $message = 'message_example'; // string | Filter by message UUID.
-$search = 'search_example'; // string | Free-text search across recipient and payload.
+$search = 'search_example'; // string | Free-text search across recipient.
 $from = new \DateTime('2013-10-20T19:20:30+01:00'); // \DateTime | Filter events on or after this ISO-8601 date.
 $to = new \DateTime('2013-10-20T19:20:30+01:00'); // \DateTime | Filter events on or before this ISO-8601 date.
 $per_page = 25; // int | Items per page (default 25).
@@ -122,7 +122,7 @@ try {
 | **source** | **string**| Filter by event source. | [optional] |
 | **campaign** | **string**| Filter by campaign UUID. | [optional] |
 | **message** | **string**| Filter by message UUID. | [optional] |
-| **search** | **string**| Free-text search across recipient and payload. | [optional] |
+| **search** | **string**| Free-text search across recipient. | [optional] |
 | **from** | **\DateTime**| Filter events on or after this ISO-8601 date. | [optional] |
 | **to** | **\DateTime**| Filter events on or before this ISO-8601 date. | [optional] |
 | **per_page** | **int**| Items per page (default 25). | [optional] |

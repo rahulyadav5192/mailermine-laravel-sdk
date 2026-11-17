@@ -271,6 +271,11 @@ class UpdateApiKeyRequest implements ModelInterface, ArrayAccess, \JsonSerializa
     public const SCOPES_PROJECTS_WRITE = 'projects.write';
     public const SCOPES_API_KEYS_READ = 'api_keys.read';
     public const SCOPES_API_KEYS_WRITE = 'api_keys.write';
+    public const SCOPES_WEBHOOKS_READ = 'webhooks.read';
+    public const SCOPES_WEBHOOKS_WRITE = 'webhooks.write';
+    public const SCOPES_SUPPRESSIONS_READ = 'suppressions.read';
+    public const SCOPES_SUPPRESSIONS_WRITE = 'suppressions.write';
+    public const SCOPES_EVENTS_READ = 'events.read';
     public const SCOPES_ADMIN = 'admin';
     public const PERMISSIONS_EMAILS_SEND = 'emails.send';
     public const PERMISSIONS_EMAILS_READ = 'emails.read';
@@ -288,6 +293,11 @@ class UpdateApiKeyRequest implements ModelInterface, ArrayAccess, \JsonSerializa
     public const PERMISSIONS_PROJECTS_WRITE = 'projects.write';
     public const PERMISSIONS_API_KEYS_READ = 'api_keys.read';
     public const PERMISSIONS_API_KEYS_WRITE = 'api_keys.write';
+    public const PERMISSIONS_WEBHOOKS_READ = 'webhooks.read';
+    public const PERMISSIONS_WEBHOOKS_WRITE = 'webhooks.write';
+    public const PERMISSIONS_SUPPRESSIONS_READ = 'suppressions.read';
+    public const PERMISSIONS_SUPPRESSIONS_WRITE = 'suppressions.write';
+    public const PERMISSIONS_EVENTS_READ = 'events.read';
     public const PERMISSIONS_ADMIN = 'admin';
 
     /**
@@ -328,6 +338,11 @@ class UpdateApiKeyRequest implements ModelInterface, ArrayAccess, \JsonSerializa
             self::SCOPES_PROJECTS_WRITE,
             self::SCOPES_API_KEYS_READ,
             self::SCOPES_API_KEYS_WRITE,
+            self::SCOPES_WEBHOOKS_READ,
+            self::SCOPES_WEBHOOKS_WRITE,
+            self::SCOPES_SUPPRESSIONS_READ,
+            self::SCOPES_SUPPRESSIONS_WRITE,
+            self::SCOPES_EVENTS_READ,
             self::SCOPES_ADMIN,
         ];
     }
@@ -356,6 +371,11 @@ class UpdateApiKeyRequest implements ModelInterface, ArrayAccess, \JsonSerializa
             self::PERMISSIONS_PROJECTS_WRITE,
             self::PERMISSIONS_API_KEYS_READ,
             self::PERMISSIONS_API_KEYS_WRITE,
+            self::PERMISSIONS_WEBHOOKS_READ,
+            self::PERMISSIONS_WEBHOOKS_WRITE,
+            self::PERMISSIONS_SUPPRESSIONS_READ,
+            self::PERMISSIONS_SUPPRESSIONS_WRITE,
+            self::PERMISSIONS_EVENTS_READ,
             self::PERMISSIONS_ADMIN,
         ];
     }

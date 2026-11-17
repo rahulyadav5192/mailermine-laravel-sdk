@@ -72,7 +72,7 @@ try {
 
 ## API Endpoints
 
-All URIs are relative to *http://127.0.0.1:8000/api/v1*
+All URIs are relative to *https://mailermine.com/api/v1*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
@@ -153,7 +153,7 @@ Class | Method | HTTP request | Description
 *ListsApi* | [**listLists**](docs/Api/ListsApi.md#listlists) | **GET** /lists | List contact lists
 *ListsApi* | [**removeContactsFromList**](docs/Api/ListsApi.md#removecontactsfromlist) | **DELETE** /lists/{list}/contacts | Remove contacts from list
 *ListsApi* | [**removeContactsFromListLegacy**](docs/Api/ListsApi.md#removecontactsfromlistlegacy) | **POST** /lists/{list}/contacts/remove | Remove contacts from list
-*ListsApi* | [**updateList**](docs/Api/ListsApi.md#updatelist) | **PATCH** /lists/{list} | Update contact list
+*ListsApi* | [**updateList**](docs/Api/ListsApi.md#updatelist) | **PUT** /lists/{list} | Update contact list
 *MarketingApi* | [**createCustomField**](docs/Api/MarketingApi.md#createcustomfield) | **POST** /custom-fields | Create custom field
 *MarketingApi* | [**deleteCustomField**](docs/Api/MarketingApi.md#deletecustomfield) | **DELETE** /custom-fields/{customField} | Delete custom field
 *MarketingApi* | [**getCustomField**](docs/Api/MarketingApi.md#getcustomfield) | **GET** /custom-fields/{customField} | Get custom field
@@ -174,9 +174,10 @@ Class | Method | HTTP request | Description
 *SegmentsApi* | [**listSegments**](docs/Api/SegmentsApi.md#listsegments) | **GET** /segments | List segments
 *SegmentsApi* | [**previewSegment**](docs/Api/SegmentsApi.md#previewsegment) | **POST** /segments/{segment}/preview | Preview segment
 *SegmentsApi* | [**previewSegmentRules**](docs/Api/SegmentsApi.md#previewsegmentrules) | **POST** /segments/preview | Preview segment rules
-*SegmentsApi* | [**updateSegment**](docs/Api/SegmentsApi.md#updatesegment) | **PATCH** /segments/{segment} | Update segment
+*SegmentsApi* | [**updateSegment**](docs/Api/SegmentsApi.md#updatesegment) | **PUT** /segments/{segment} | Update segment
 *SuppressionsApi* | [**createSuppression**](docs/Api/SuppressionsApi.md#createsuppression) | **POST** /suppressions | Create suppression
 *SuppressionsApi* | [**deleteSuppression**](docs/Api/SuppressionsApi.md#deletesuppression) | **DELETE** /suppressions/{suppression} | Delete suppression
+*SuppressionsApi* | [**getSuppression**](docs/Api/SuppressionsApi.md#getsuppression) | **GET** /suppressions/{suppression} | Get suppression
 *SuppressionsApi* | [**listSuppressions**](docs/Api/SuppressionsApi.md#listsuppressions) | **GET** /suppressions | List suppressions
 *SuppressionsApi* | [**restoreSuppression**](docs/Api/SuppressionsApi.md#restoresuppression) | **POST** /suppressions/{suppression}/restore | Restore suppression
 *TagsApi* | [**bulkAssignTags**](docs/Api/TagsApi.md#bulkassigntags) | **POST** /tags/bulk-assign | Bulk assign tags

@@ -2,12 +2,13 @@
 
 Manage suppressed recipient addresses that are skipped when sending.
 
-All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation defines another base path.
+All URIs are relative to https://mailermine.com/api/v1, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
 | [**createSuppression()**](SuppressionsApi.md#createSuppression) | **POST** /suppressions | Create suppression |
 | [**deleteSuppression()**](SuppressionsApi.md#deleteSuppression) | **DELETE** /suppressions/{suppression} | Delete suppression |
+| [**getSuppression()**](SuppressionsApi.md#getSuppression) | **GET** /suppressions/{suppression} | Get suppression |
 | [**listSuppressions()**](SuppressionsApi.md#listSuppressions) | **GET** /suppressions | List suppressions |
 | [**restoreSuppression()**](SuppressionsApi.md#restoreSuppression) | **POST** /suppressions/{suppression}/restore | Restore suppression |
 
@@ -118,6 +119,66 @@ try {
 ### Return type
 
 [**\OpenAPI\Client\Model\DeleteResponse**](../Model/DeleteResponse.md)
+
+### Authorization
+
+[bearerAuth](../../README.md#bearerAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `getSuppression()`
+
+```php
+getSuppression($suppression): \OpenAPI\Client\Model\SuppressionResponse
+```
+
+Get suppression
+
+Retrieve a suppressed address by UUID. Required scope: `suppressions.read`.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure Bearer (API Key) authorization: bearerAuth
+$config = OpenAPI\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
+
+$apiInstance = new OpenAPI\Client\Api\SuppressionsApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$suppression = 'suppression_example'; // string | Suppression UUID (returned as `id` from create/list).
+
+try {
+    $result = $apiInstance->getSuppression($suppression);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling SuppressionsApi->getSuppression: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **suppression** | **string**| Suppression UUID (returned as &#x60;id&#x60; from create/list). | |
+
+### Return type
+
+[**\OpenAPI\Client\Model\SuppressionResponse**](../Model/SuppressionResponse.md)
 
 ### Authorization
 

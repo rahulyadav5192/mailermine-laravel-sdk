@@ -2,7 +2,7 @@
 
 Send transactional email with attachments, CC/BCC, headers, tags, and metadata.
 
-All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation defines another base path.
+All URIs are relative to https://mailermine.com/api/v1, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
@@ -12,7 +12,7 @@ All URIs are relative to http://127.0.0.1:8000/api/v1, except if the operation d
 ## `sendEmail()`
 
 ```php
-sendEmail($send_email_request): \OpenAPI\Client\Model\SendEmailResponse
+sendEmail($send_email_request, $idempotency_key): \OpenAPI\Client\Model\SendEmailResponse
 ```
 
 Send email
@@ -37,9 +37,10 @@ $apiInstance = new OpenAPI\Client\Api\EmailsApi(
     $config
 );
 $send_email_request = new \OpenAPI\Client\Model\SendEmailRequest(); // \OpenAPI\Client\Model\SendEmailRequest
+$idempotency_key = order-1042-receipt; // string | Optional unique key (max 255 chars). Retrying with the same key and body returns the original response instead of sending again; the same key with a different body returns 422. Keys are kept for 24 hours.
 
 try {
-    $result = $apiInstance->sendEmail($send_email_request);
+    $result = $apiInstance->sendEmail($send_email_request, $idempotency_key);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling EmailsApi->sendEmail: ', $e->getMessage(), PHP_EOL;
@@ -51,6 +52,7 @@ try {
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
 | **send_email_request** | [**\OpenAPI\Client\Model\SendEmailRequest**](../Model/SendEmailRequest.md)|  | |
+| **idempotency_key** | **string**| Optional unique key (max 255 chars). Retrying with the same key and body returns the original response instead of sending again; the same key with a different body returns 422. Keys are kept for 24 hours. | [optional] |
 
 ### Return type
 

@@ -57,7 +57,19 @@ class CreateCampaignRequest implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $openAPITypes = [
-        'name' => 'string'
+        'name' => 'string',
+        'subject' => 'string',
+        'preview_text' => 'string',
+        'from_name' => 'string',
+        'from_email' => 'string',
+        'reply_to' => 'string',
+        'template_uuid' => 'string',
+        'template_id' => 'string',
+        'segment_uuid' => 'string',
+        'segment_id' => 'string',
+        'send_immediately' => 'bool',
+        'scheduled_at' => '\DateTime',
+        'timezone' => 'string'
     ];
 
     /**
@@ -68,7 +80,19 @@ class CreateCampaignRequest implements ModelInterface, ArrayAccess, \JsonSeriali
      * @psalm-var array<string, string|null>
      */
     protected static $openAPIFormats = [
-        'name' => null
+        'name' => null,
+        'subject' => null,
+        'preview_text' => null,
+        'from_name' => null,
+        'from_email' => 'email',
+        'reply_to' => 'email',
+        'template_uuid' => 'uuid',
+        'template_id' => 'uuid',
+        'segment_uuid' => 'uuid',
+        'segment_id' => 'uuid',
+        'send_immediately' => null,
+        'scheduled_at' => 'date-time',
+        'timezone' => null
     ];
 
     /**
@@ -77,7 +101,19 @@ class CreateCampaignRequest implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var boolean[]
      */
     protected static array $openAPINullables = [
-        'name' => false
+        'name' => false,
+        'subject' => true,
+        'preview_text' => true,
+        'from_name' => true,
+        'from_email' => true,
+        'reply_to' => true,
+        'template_uuid' => true,
+        'template_id' => true,
+        'segment_uuid' => true,
+        'segment_id' => true,
+        'send_immediately' => false,
+        'scheduled_at' => true,
+        'timezone' => true
     ];
 
     /**
@@ -166,7 +202,19 @@ class CreateCampaignRequest implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $attributeMap = [
-        'name' => 'name'
+        'name' => 'name',
+        'subject' => 'subject',
+        'preview_text' => 'preview_text',
+        'from_name' => 'from_name',
+        'from_email' => 'from_email',
+        'reply_to' => 'reply_to',
+        'template_uuid' => 'template_uuid',
+        'template_id' => 'template_id',
+        'segment_uuid' => 'segment_uuid',
+        'segment_id' => 'segment_id',
+        'send_immediately' => 'send_immediately',
+        'scheduled_at' => 'scheduled_at',
+        'timezone' => 'timezone'
     ];
 
     /**
@@ -175,7 +223,19 @@ class CreateCampaignRequest implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $setters = [
-        'name' => 'setName'
+        'name' => 'setName',
+        'subject' => 'setSubject',
+        'preview_text' => 'setPreviewText',
+        'from_name' => 'setFromName',
+        'from_email' => 'setFromEmail',
+        'reply_to' => 'setReplyTo',
+        'template_uuid' => 'setTemplateUuid',
+        'template_id' => 'setTemplateId',
+        'segment_uuid' => 'setSegmentUuid',
+        'segment_id' => 'setSegmentId',
+        'send_immediately' => 'setSendImmediately',
+        'scheduled_at' => 'setScheduledAt',
+        'timezone' => 'setTimezone'
     ];
 
     /**
@@ -184,7 +244,19 @@ class CreateCampaignRequest implements ModelInterface, ArrayAccess, \JsonSeriali
      * @var string[]
      */
     protected static $getters = [
-        'name' => 'getName'
+        'name' => 'getName',
+        'subject' => 'getSubject',
+        'preview_text' => 'getPreviewText',
+        'from_name' => 'getFromName',
+        'from_email' => 'getFromEmail',
+        'reply_to' => 'getReplyTo',
+        'template_uuid' => 'getTemplateUuid',
+        'template_id' => 'getTemplateId',
+        'segment_uuid' => 'getSegmentUuid',
+        'segment_id' => 'getSegmentId',
+        'send_immediately' => 'getSendImmediately',
+        'scheduled_at' => 'getScheduledAt',
+        'timezone' => 'getTimezone'
     ];
 
     /**
@@ -245,6 +317,18 @@ class CreateCampaignRequest implements ModelInterface, ArrayAccess, \JsonSeriali
     public function __construct(?array $data = null)
     {
         $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('subject', $data ?? [], null);
+        $this->setIfExists('preview_text', $data ?? [], null);
+        $this->setIfExists('from_name', $data ?? [], null);
+        $this->setIfExists('from_email', $data ?? [], null);
+        $this->setIfExists('reply_to', $data ?? [], null);
+        $this->setIfExists('template_uuid', $data ?? [], null);
+        $this->setIfExists('template_id', $data ?? [], null);
+        $this->setIfExists('segment_uuid', $data ?? [], null);
+        $this->setIfExists('segment_id', $data ?? [], null);
+        $this->setIfExists('send_immediately', $data ?? [], null);
+        $this->setIfExists('scheduled_at', $data ?? [], null);
+        $this->setIfExists('timezone', $data ?? [], null);
     }
 
     /**
@@ -279,6 +363,30 @@ class CreateCampaignRequest implements ModelInterface, ArrayAccess, \JsonSeriali
         }
         if ((mb_strlen($this->container['name']) > 255)) {
             $invalidProperties[] = "invalid value for 'name', the character length must be smaller than or equal to 255.";
+        }
+
+        if (!is_null($this->container['subject']) && (mb_strlen($this->container['subject']) > 500)) {
+            $invalidProperties[] = "invalid value for 'subject', the character length must be smaller than or equal to 500.";
+        }
+
+        if (!is_null($this->container['preview_text']) && (mb_strlen($this->container['preview_text']) > 500)) {
+            $invalidProperties[] = "invalid value for 'preview_text', the character length must be smaller than or equal to 500.";
+        }
+
+        if (!is_null($this->container['from_name']) && (mb_strlen($this->container['from_name']) > 255)) {
+            $invalidProperties[] = "invalid value for 'from_name', the character length must be smaller than or equal to 255.";
+        }
+
+        if (!is_null($this->container['from_email']) && (mb_strlen($this->container['from_email']) > 255)) {
+            $invalidProperties[] = "invalid value for 'from_email', the character length must be smaller than or equal to 255.";
+        }
+
+        if (!is_null($this->container['reply_to']) && (mb_strlen($this->container['reply_to']) > 255)) {
+            $invalidProperties[] = "invalid value for 'reply_to', the character length must be smaller than or equal to 255.";
+        }
+
+        if (!is_null($this->container['timezone']) && (mb_strlen($this->container['timezone']) > 64)) {
+            $invalidProperties[] = "invalid value for 'timezone', the character length must be smaller than or equal to 64.";
         }
 
         return $invalidProperties;
@@ -323,6 +431,431 @@ class CreateCampaignRequest implements ModelInterface, ArrayAccess, \JsonSeriali
         }
 
         $this->container['name'] = $name;
+
+        return $this;
+    }
+
+    /**
+     * Gets subject
+     *
+     * @return string|null
+     */
+    public function getSubject()
+    {
+        return $this->container['subject'];
+    }
+
+    /**
+     * Sets subject
+     *
+     * @param string|null $subject subject
+     *
+     * @return self
+     */
+    public function setSubject($subject)
+    {
+        if (is_null($subject)) {
+            array_push($this->openAPINullablesSetToNull, 'subject');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('subject', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        if (!is_null($subject) && (mb_strlen($subject) > 500)) {
+            throw new \InvalidArgumentException('invalid length for $subject when calling CreateCampaignRequest., must be smaller than or equal to 500.');
+        }
+
+        $this->container['subject'] = $subject;
+
+        return $this;
+    }
+
+    /**
+     * Gets preview_text
+     *
+     * @return string|null
+     */
+    public function getPreviewText()
+    {
+        return $this->container['preview_text'];
+    }
+
+    /**
+     * Sets preview_text
+     *
+     * @param string|null $preview_text preview_text
+     *
+     * @return self
+     */
+    public function setPreviewText($preview_text)
+    {
+        if (is_null($preview_text)) {
+            array_push($this->openAPINullablesSetToNull, 'preview_text');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('preview_text', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        if (!is_null($preview_text) && (mb_strlen($preview_text) > 500)) {
+            throw new \InvalidArgumentException('invalid length for $preview_text when calling CreateCampaignRequest., must be smaller than or equal to 500.');
+        }
+
+        $this->container['preview_text'] = $preview_text;
+
+        return $this;
+    }
+
+    /**
+     * Gets from_name
+     *
+     * @return string|null
+     */
+    public function getFromName()
+    {
+        return $this->container['from_name'];
+    }
+
+    /**
+     * Sets from_name
+     *
+     * @param string|null $from_name from_name
+     *
+     * @return self
+     */
+    public function setFromName($from_name)
+    {
+        if (is_null($from_name)) {
+            array_push($this->openAPINullablesSetToNull, 'from_name');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('from_name', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        if (!is_null($from_name) && (mb_strlen($from_name) > 255)) {
+            throw new \InvalidArgumentException('invalid length for $from_name when calling CreateCampaignRequest., must be smaller than or equal to 255.');
+        }
+
+        $this->container['from_name'] = $from_name;
+
+        return $this;
+    }
+
+    /**
+     * Gets from_email
+     *
+     * @return string|null
+     */
+    public function getFromEmail()
+    {
+        return $this->container['from_email'];
+    }
+
+    /**
+     * Sets from_email
+     *
+     * @param string|null $from_email from_email
+     *
+     * @return self
+     */
+    public function setFromEmail($from_email)
+    {
+        if (is_null($from_email)) {
+            array_push($this->openAPINullablesSetToNull, 'from_email');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('from_email', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        if (!is_null($from_email) && (mb_strlen($from_email) > 255)) {
+            throw new \InvalidArgumentException('invalid length for $from_email when calling CreateCampaignRequest., must be smaller than or equal to 255.');
+        }
+
+        $this->container['from_email'] = $from_email;
+
+        return $this;
+    }
+
+    /**
+     * Gets reply_to
+     *
+     * @return string|null
+     */
+    public function getReplyTo()
+    {
+        return $this->container['reply_to'];
+    }
+
+    /**
+     * Sets reply_to
+     *
+     * @param string|null $reply_to reply_to
+     *
+     * @return self
+     */
+    public function setReplyTo($reply_to)
+    {
+        if (is_null($reply_to)) {
+            array_push($this->openAPINullablesSetToNull, 'reply_to');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('reply_to', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        if (!is_null($reply_to) && (mb_strlen($reply_to) > 255)) {
+            throw new \InvalidArgumentException('invalid length for $reply_to when calling CreateCampaignRequest., must be smaller than or equal to 255.');
+        }
+
+        $this->container['reply_to'] = $reply_to;
+
+        return $this;
+    }
+
+    /**
+     * Gets template_uuid
+     *
+     * @return string|null
+     */
+    public function getTemplateUuid()
+    {
+        return $this->container['template_uuid'];
+    }
+
+    /**
+     * Sets template_uuid
+     *
+     * @param string|null $template_uuid Published template UUID.
+     *
+     * @return self
+     */
+    public function setTemplateUuid($template_uuid)
+    {
+        if (is_null($template_uuid)) {
+            array_push($this->openAPINullablesSetToNull, 'template_uuid');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('template_uuid', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['template_uuid'] = $template_uuid;
+
+        return $this;
+    }
+
+    /**
+     * Gets template_id
+     *
+     * @return string|null
+     */
+    public function getTemplateId()
+    {
+        return $this->container['template_id'];
+    }
+
+    /**
+     * Sets template_id
+     *
+     * @param string|null $template_id Published template UUID (alias of `template_uuid`).
+     *
+     * @return self
+     */
+    public function setTemplateId($template_id)
+    {
+        if (is_null($template_id)) {
+            array_push($this->openAPINullablesSetToNull, 'template_id');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('template_id', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['template_id'] = $template_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets segment_uuid
+     *
+     * @return string|null
+     */
+    public function getSegmentUuid()
+    {
+        return $this->container['segment_uuid'];
+    }
+
+    /**
+     * Sets segment_uuid
+     *
+     * @param string|null $segment_uuid Audience segment UUID.
+     *
+     * @return self
+     */
+    public function setSegmentUuid($segment_uuid)
+    {
+        if (is_null($segment_uuid)) {
+            array_push($this->openAPINullablesSetToNull, 'segment_uuid');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('segment_uuid', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['segment_uuid'] = $segment_uuid;
+
+        return $this;
+    }
+
+    /**
+     * Gets segment_id
+     *
+     * @return string|null
+     */
+    public function getSegmentId()
+    {
+        return $this->container['segment_id'];
+    }
+
+    /**
+     * Sets segment_id
+     *
+     * @param string|null $segment_id Audience segment UUID (alias of `segment_uuid`).
+     *
+     * @return self
+     */
+    public function setSegmentId($segment_id)
+    {
+        if (is_null($segment_id)) {
+            array_push($this->openAPINullablesSetToNull, 'segment_id');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('segment_id', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['segment_id'] = $segment_id;
+
+        return $this;
+    }
+
+    /**
+     * Gets send_immediately
+     *
+     * @return bool|null
+     */
+    public function getSendImmediately()
+    {
+        return $this->container['send_immediately'];
+    }
+
+    /**
+     * Sets send_immediately
+     *
+     * @param bool|null $send_immediately Whether delivery should be immediate. Defaults to true (draft).
+     *
+     * @return self
+     */
+    public function setSendImmediately($send_immediately)
+    {
+        if (is_null($send_immediately)) {
+            throw new \InvalidArgumentException('non-nullable send_immediately cannot be null');
+        }
+        $this->container['send_immediately'] = $send_immediately;
+
+        return $this;
+    }
+
+    /**
+     * Gets scheduled_at
+     *
+     * @return \DateTime|null
+     */
+    public function getScheduledAt()
+    {
+        return $this->container['scheduled_at'];
+    }
+
+    /**
+     * Sets scheduled_at
+     *
+     * @param \DateTime|null $scheduled_at Required when `send_immediately` is false. ISO-8601 date-time.
+     *
+     * @return self
+     */
+    public function setScheduledAt($scheduled_at)
+    {
+        if (is_null($scheduled_at)) {
+            array_push($this->openAPINullablesSetToNull, 'scheduled_at');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('scheduled_at', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['scheduled_at'] = $scheduled_at;
+
+        return $this;
+    }
+
+    /**
+     * Gets timezone
+     *
+     * @return string|null
+     */
+    public function getTimezone()
+    {
+        return $this->container['timezone'];
+    }
+
+    /**
+     * Sets timezone
+     *
+     * @param string|null $timezone IANA timezone used to interpret `scheduled_at`. Required when scheduling.
+     *
+     * @return self
+     */
+    public function setTimezone($timezone)
+    {
+        if (is_null($timezone)) {
+            array_push($this->openAPINullablesSetToNull, 'timezone');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('timezone', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        if (!is_null($timezone) && (mb_strlen($timezone) > 64)) {
+            throw new \InvalidArgumentException('invalid length for $timezone when calling CreateCampaignRequest., must be smaller than or equal to 64.');
+        }
+
+        $this->container['timezone'] = $timezone;
 
         return $this;
     }

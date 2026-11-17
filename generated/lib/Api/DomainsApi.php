@@ -201,6 +201,12 @@ class DomainsApi
                         $request,
                         $response,
                     );
+                case 409:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\InlineObject',
+                        $request,
+                        $response,
+                    );
                 case 400:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
@@ -220,12 +226,6 @@ class DomainsApi
                         $response,
                     );
                 case 404:
-                    return $this->handleResponseWithDataType(
-                        '\OpenAPI\Client\Model\InlineObject',
-                        $request,
-                        $response,
-                    );
-                case 409:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
                         $request,
@@ -281,6 +281,14 @@ class DomainsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 409:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\InlineObject',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 400:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -306,14 +314,6 @@ class DomainsApi
                     $e->setResponseObject($data);
                     throw $e;
                 case 404:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\InlineObject',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    throw $e;
-                case 409:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\OpenAPI\Client\Model\InlineObject',
@@ -530,7 +530,7 @@ class DomainsApi
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\DeleteResponse|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject
+     * @return \OpenAPI\Client\Model\DeleteResponse|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject
      */
     public function deleteDomain($domain, string $contentType = self::contentTypes['deleteDomain'][0])
     {
@@ -548,7 +548,7 @@ class DomainsApi
      *
      * @throws \OpenAPI\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\DeleteResponse|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \OpenAPI\Client\Model\DeleteResponse|\OpenAPI\Client\Model\InlineObject1|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject|\OpenAPI\Client\Model\InlineObject, HTTP status code, HTTP response headers (array of strings)
      */
     public function deleteDomainWithHttpInfo($domain, string $contentType = self::contentTypes['deleteDomain'][0])
     {
@@ -584,6 +584,12 @@ class DomainsApi
                         $request,
                         $response,
                     );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\OpenAPI\Client\Model\InlineObject1',
+                        $request,
+                        $response,
+                    );
                 case 400:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
@@ -611,12 +617,6 @@ class DomainsApi
                 case 409:
                     return $this->handleResponseWithDataType(
                         '\OpenAPI\Client\Model\InlineObject',
-                        $request,
-                        $response,
-                    );
-                case 422:
-                    return $this->handleResponseWithDataType(
-                        '\OpenAPI\Client\Model\InlineObject1',
                         $request,
                         $response,
                     );
@@ -664,6 +664,14 @@ class DomainsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\OpenAPI\Client\Model\InlineObject1',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
                 case 400:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
@@ -700,14 +708,6 @@ class DomainsApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\OpenAPI\Client\Model\InlineObject',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    throw $e;
-                case 422:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\InlineObject1',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
