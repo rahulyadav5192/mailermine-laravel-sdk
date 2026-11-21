@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   including the new `webhooks.*`, `suppressions.*` and `events.read` scopes.
 - `Webhooks::verifyHeaders()` reads the signature and timestamp headers.
 - `suppressions` GET-by-id support in the regenerated client.
+- `held` message status: messages held for MailerMine trust & safety review
+  (the send call still returns 202). Blocked sends return 422 with an
+  `errors.content`, `errors.sending_limit`, `errors.recipients` or
+  `errors.sending` key, raised as `ValidationException`.
 
 ### Fixed
 

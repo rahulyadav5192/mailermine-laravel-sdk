@@ -60,6 +60,8 @@ class MessageStatus
 
     public const DEFERRED = 'deferred';
 
+    public const HELD = 'held';
+
     /**
      * Gets allowable values of the enum
      * @return string[]
@@ -75,7 +77,8 @@ class MessageStatus
             self::COMPLAINED,
             self::REJECTED,
             self::FAILED,
-            self::DEFERRED
+            self::DEFERRED,
+            self::HELD
         ];
     }
 }
