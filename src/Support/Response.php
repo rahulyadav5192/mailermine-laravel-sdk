@@ -75,6 +75,8 @@ final class Response implements ArrayAccess, JsonSerializable
 
     /**
      * Wrap a raw generated response or array in a clean SDK response.
+     *
+     * @param  array<string, mixed>  $headers
      */
     public static function from(mixed $raw, array $headers = []): self
     {
