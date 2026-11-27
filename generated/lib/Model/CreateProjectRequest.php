@@ -63,7 +63,7 @@ class CreateProjectRequest implements ModelInterface, ArrayAccess, \JsonSerializ
         'environment' => 'string',
         'timezone' => 'string',
         'default_sender' => 'string',
-        'settings' => 'object'
+        'settings' => '\OpenAPI\Client\Model\CreateProjectRequestSettings'
     ];
 
     /**
@@ -611,7 +611,7 @@ class CreateProjectRequest implements ModelInterface, ArrayAccess, \JsonSerializ
     /**
      * Gets settings
      *
-     * @return object|null
+     * @return \OpenAPI\Client\Model\CreateProjectRequestSettings|null
      */
     public function getSettings()
     {
@@ -621,7 +621,7 @@ class CreateProjectRequest implements ModelInterface, ArrayAccess, \JsonSerializ
     /**
      * Sets settings
      *
-     * @param object|null $settings Extensible project settings.
+     * @param \OpenAPI\Client\Model\CreateProjectRequestSettings|null $settings settings
      *
      * @return self
      */

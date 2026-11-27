@@ -107,6 +107,8 @@ docs/Model/CreateCustomFieldRequest.md
 docs/Model/CreateDomainRequest.md
 docs/Model/CreateListRequest.md
 docs/Model/CreateProjectRequest.md
+docs/Model/CreateProjectRequestSettings.md
+docs/Model/CreateProjectRequestSettingsTracking.md
 docs/Model/CreateSegmentRequest.md
 docs/Model/CreateSegmentRequestRules.md
 docs/Model/CreateSuppressionRequest.md
@@ -174,6 +176,7 @@ docs/Model/SegmentResource.md
 docs/Model/SegmentResponse.md
 docs/Model/SendEmailRequest.md
 docs/Model/SendEmailRequestAttachmentsInner.md
+docs/Model/SendEmailRequestTracking.md
 docs/Model/SendEmailResponse.md
 docs/Model/Suppression.md
 docs/Model/SuppressionListResponse.md
@@ -332,6 +335,8 @@ lib/Model/CreateCustomFieldRequest.php
 lib/Model/CreateDomainRequest.php
 lib/Model/CreateListRequest.php
 lib/Model/CreateProjectRequest.php
+lib/Model/CreateProjectRequestSettings.php
+lib/Model/CreateProjectRequestSettingsTracking.php
 lib/Model/CreateSegmentRequest.php
 lib/Model/CreateSegmentRequestRules.php
 lib/Model/CreateSuppressionRequest.php
@@ -400,6 +405,7 @@ lib/Model/SegmentResource.php
 lib/Model/SegmentResponse.php
 lib/Model/SendEmailRequest.php
 lib/Model/SendEmailRequestAttachmentsInner.php
+lib/Model/SendEmailRequestTracking.php
 lib/Model/SendEmailResponse.php
 lib/Model/Suppression.php
 lib/Model/SuppressionListResponse.php
@@ -451,3 +457,6 @@ lib/Model/WebhookSecretResponse.php
 lib/Model/WebhookWithSecret.php
 lib/ObjectSerializer.php
 phpunit.xml.dist
+test/Model/CreateProjectRequestSettingsTest.php
+test/Model/CreateProjectRequestSettingsTrackingTest.php
+test/Model/SendEmailRequestTrackingTest.php

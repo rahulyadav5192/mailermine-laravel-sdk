@@ -70,6 +70,7 @@ class SendEmailRequest implements ModelInterface, ArrayAccess, \JsonSerializable
         'metadata' => 'object',
         'tags' => 'string[]',
         'headers' => 'object',
+        'tracking' => '\OpenAPI\Client\Model\SendEmailRequestTracking',
         'attachments' => '\OpenAPI\Client\Model\SendEmailRequestAttachmentsInner[]'
     ];
 
@@ -94,6 +95,7 @@ class SendEmailRequest implements ModelInterface, ArrayAccess, \JsonSerializable
         'metadata' => null,
         'tags' => null,
         'headers' => null,
+        'tracking' => null,
         'attachments' => null
     ];
 
@@ -116,6 +118,7 @@ class SendEmailRequest implements ModelInterface, ArrayAccess, \JsonSerializable
         'metadata' => false,
         'tags' => false,
         'headers' => false,
+        'tracking' => false,
         'attachments' => false
     ];
 
@@ -218,6 +221,7 @@ class SendEmailRequest implements ModelInterface, ArrayAccess, \JsonSerializable
         'metadata' => 'metadata',
         'tags' => 'tags',
         'headers' => 'headers',
+        'tracking' => 'tracking',
         'attachments' => 'attachments'
     ];
 
@@ -240,6 +244,7 @@ class SendEmailRequest implements ModelInterface, ArrayAccess, \JsonSerializable
         'metadata' => 'setMetadata',
         'tags' => 'setTags',
         'headers' => 'setHeaders',
+        'tracking' => 'setTracking',
         'attachments' => 'setAttachments'
     ];
 
@@ -262,6 +267,7 @@ class SendEmailRequest implements ModelInterface, ArrayAccess, \JsonSerializable
         'metadata' => 'getMetadata',
         'tags' => 'getTags',
         'headers' => 'getHeaders',
+        'tracking' => 'getTracking',
         'attachments' => 'getAttachments'
     ];
 
@@ -335,6 +341,7 @@ class SendEmailRequest implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('metadata', $data ?? [], null);
         $this->setIfExists('tags', $data ?? [], null);
         $this->setIfExists('headers', $data ?? [], null);
+        $this->setIfExists('tracking', $data ?? [], null);
         $this->setIfExists('attachments', $data ?? [], null);
     }
 
@@ -756,6 +763,33 @@ class SendEmailRequest implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable headers cannot be null');
         }
         $this->container['headers'] = $headers;
+
+        return $this;
+    }
+
+    /**
+     * Gets tracking
+     *
+     * @return \OpenAPI\Client\Model\SendEmailRequestTracking|null
+     */
+    public function getTracking()
+    {
+        return $this->container['tracking'];
+    }
+
+    /**
+     * Sets tracking
+     *
+     * @param \OpenAPI\Client\Model\SendEmailRequestTracking|null $tracking tracking
+     *
+     * @return self
+     */
+    public function setTracking($tracking)
+    {
+        if (is_null($tracking)) {
+            throw new \InvalidArgumentException('non-nullable tracking cannot be null');
+        }
+        $this->container['tracking'] = $tracking;
 
         return $this;
     }
