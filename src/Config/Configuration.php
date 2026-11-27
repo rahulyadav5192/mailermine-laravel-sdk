@@ -11,7 +11,7 @@ use InvalidArgumentException;
  */
 final class Configuration
 {
-    public const DEFAULT_USER_AGENT = 'mailermine-php/1.1.0';
+    public const DEFAULT_USER_AGENT = 'mailermine-php/1.2.0';
 
     public const DEFAULT_MAX_RETRIES = 2;
 

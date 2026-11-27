@@ -311,6 +311,27 @@ $events = $mm->emails()->events($messageId);
 $recent = $mm->emails()->list(['status' => 'sent', 'page' => 1]);
 ```
 
+#### Open and click tracking
+
+Tracking follows your project's defaults. Override it for one email with
+`tracking`, or leave a single link untracked with `data-mm-notrack`:
+
+```php
+// Password reset: track opens, but don't rewrite the reset link.
+$mm->emails()->send([
+    'from'     => 'hello@mailermine.com',
+    'to'       => 'john@example.com',
+    'subject'  => 'Reset your password',
+    'html'     => '<a href="https://app.example.com/reset?t=abc">Reset password</a>',
+    'tracking' => ['opens' => true, 'clicks' => false],
+]);
+
+// Project defaults
+$mm->projects()->update($projectId, ['settings' => ['tracking' => ['opens' => true, 'clicks' => true]]]);
+```
+
+`email.clicked` webhooks include `click.url` (the link that was clicked).
+
 ### Domains
 
 ```php

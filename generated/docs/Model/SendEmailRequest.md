@@ -17,6 +17,7 @@ Name | Type | Description | Notes
 **metadata** | **object** | Custom metadata stored with the message. | [optional]
 **tags** | **string[]** | Tags for filtering and analytics. | [optional]
 **headers** | **object** | Custom email headers (requires &#x60;allow_custom_headers&#x60; plan capability). | [optional]
+**tracking** | [**\OpenAPI\Client\Model\SendEmailRequestTracking**](SendEmailRequestTracking.md) |  | [optional]
 **attachments** | [**\OpenAPI\Client\Model\SendEmailRequestAttachmentsInner[]**](SendEmailRequestAttachmentsInner.md) | Base64-encoded file attachments. | [optional]
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

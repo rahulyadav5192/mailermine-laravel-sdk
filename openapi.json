@@ -12575,6 +12575,30 @@
                             }
                         ]
                     },
+                    "tracking": {
+                        "type": "object",
+                        "description": "Turn open and click tracking on or off for this email, overriding the project default. Omitted or null keys use the project default. Plan limits and sender trust rules still apply, so tracking may stay off even when requested. Add `data-mm-notrack` to an `<a>` tag to exclude a single link.",
+                        "examples": [
+                            {
+                                "opens": true,
+                                "clicks": false
+                            }
+                        ],
+                        "properties": {
+                            "opens": {
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
+                            },
+                            "clicks": {
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
                     "attachments": {
                         "type": "array",
                         "description": "Base64-encoded file attachments.",
@@ -13477,12 +13501,40 @@
                     },
                     "settings": {
                         "type": "object",
-                        "description": "Extensible project settings.",
+                        "description": "Extensible project settings. `tracking.opens` and `tracking.clicks` (booleans, default true) set the project default for open and click tracking.",
                         "examples": [
                             {
-                                "region": "us-east-1"
+                                "environment": "production",
+                                "tracking": {
+                                    "opens": true,
+                                    "clicks": false
+                                }
                             }
-                        ]
+                        ],
+                        "properties": {
+                            "tracking": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "properties": {
+                                    "opens": {
+                                        "type": [
+                                            "boolean",
+                                            "null"
+                                        ]
+                                    },
+                                    "clicks": {
+                                        "type": [
+                                            "boolean",
+                                            "null"
+                                        ]
+                                    }
+                                },
+                                "description": "Project default for open and click tracking. Omitted keys default to true."
+                            }
+                        },
+                        "additionalProperties": true
                     }
                 },
                 "required": [
@@ -13565,7 +13617,40 @@
                     },
                     "settings": {
                         "type": "object",
-                        "description": "Replacement settings object."
+                        "description": "Replacement settings object.",
+                        "properties": {
+                            "tracking": {
+                                "type": [
+                                    "object",
+                                    "null"
+                                ],
+                                "properties": {
+                                    "opens": {
+                                        "type": [
+                                            "boolean",
+                                            "null"
+                                        ]
+                                    },
+                                    "clicks": {
+                                        "type": [
+                                            "boolean",
+                                            "null"
+                                        ]
+                                    }
+                                },
+                                "description": "Project default for open and click tracking. Omitted keys default to true."
+                            }
+                        },
+                        "additionalProperties": true,
+                        "examples": [
+                            {
+                                "environment": "production",
+                                "tracking": {
+                                    "opens": true,
+                                    "clicks": false
+                                }
+                            }
+                        ]
                     },
                     "status": {
                         "type": "string",
