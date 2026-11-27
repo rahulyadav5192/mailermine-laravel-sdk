@@ -35,6 +35,7 @@ docs/Model/AnalyticsDomains.md
 docs/Model/AnalyticsDomainsDomainsInner.md
 docs/Model/AnalyticsDomainsResponse.md
 docs/Model/AnalyticsEngagement.md
+docs/Model/AnalyticsEngagementByTrackingDomainInner.md
 docs/Model/AnalyticsEngagementResponse.md
 docs/Model/AnalyticsMessages.md
 docs/Model/AnalyticsMessagesDailyInner.md
@@ -46,6 +47,7 @@ docs/Model/AnalyticsOverviewRecentActivityInner.md
 docs/Model/AnalyticsOverviewResponse.md
 docs/Model/AnalyticsOverviewTopCampaignsInner.md
 docs/Model/AnalyticsOverviewTopLinksInner.md
+docs/Model/AnalyticsOverviewTracking.md
 docs/Model/AnalyticsProjects.md
 docs/Model/AnalyticsProjectsProjectsInner.md
 docs/Model/AnalyticsProjectsResponse.md
@@ -263,6 +265,7 @@ lib/Model/AnalyticsDomains.php
 lib/Model/AnalyticsDomainsDomainsInner.php
 lib/Model/AnalyticsDomainsResponse.php
 lib/Model/AnalyticsEngagement.php
+lib/Model/AnalyticsEngagementByTrackingDomainInner.php
 lib/Model/AnalyticsEngagementResponse.php
 lib/Model/AnalyticsMessages.php
 lib/Model/AnalyticsMessagesDailyInner.php
@@ -274,6 +277,7 @@ lib/Model/AnalyticsOverviewRecentActivityInner.php
 lib/Model/AnalyticsOverviewResponse.php
 lib/Model/AnalyticsOverviewTopCampaignsInner.php
 lib/Model/AnalyticsOverviewTopLinksInner.php
+lib/Model/AnalyticsOverviewTracking.php
 lib/Model/AnalyticsProjects.php
 lib/Model/AnalyticsProjectsProjectsInner.php
 lib/Model/AnalyticsProjectsResponse.php
@@ -457,6 +461,5 @@ lib/Model/WebhookSecretResponse.php
 lib/Model/WebhookWithSecret.php
 lib/ObjectSerializer.php
 phpunit.xml.dist
-test/Model/CreateProjectRequestSettingsTest.php
-test/Model/CreateProjectRequestSettingsTrackingTest.php
-test/Model/SendEmailRequestTrackingTest.php
+test/Model/AnalyticsEngagementByTrackingDomainInnerTest.php
+test/Model/AnalyticsOverviewTrackingTest.php
