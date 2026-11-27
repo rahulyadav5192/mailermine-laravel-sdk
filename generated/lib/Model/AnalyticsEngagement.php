@@ -67,7 +67,10 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
         'ctr' => 'float',
         'ctor' => 'float',
         'sent' => 'int',
-        'delivered' => 'int'
+        'delivered' => 'int',
+        'opens_tracked_delivered' => 'int',
+        'clicks_tracked_delivered' => 'int',
+        'by_tracking_domain' => '\OpenAPI\Client\Model\AnalyticsEngagementByTrackingDomainInner[]'
     ];
 
     /**
@@ -88,7 +91,10 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
         'ctr' => null,
         'ctor' => null,
         'sent' => null,
-        'delivered' => null
+        'delivered' => null,
+        'opens_tracked_delivered' => null,
+        'clicks_tracked_delivered' => null,
+        'by_tracking_domain' => null
     ];
 
     /**
@@ -107,7 +113,10 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
         'ctr' => false,
         'ctor' => false,
         'sent' => false,
-        'delivered' => false
+        'delivered' => false,
+        'opens_tracked_delivered' => true,
+        'clicks_tracked_delivered' => true,
+        'by_tracking_domain' => true
     ];
 
     /**
@@ -206,7 +215,10 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
         'ctr' => 'ctr',
         'ctor' => 'ctor',
         'sent' => 'sent',
-        'delivered' => 'delivered'
+        'delivered' => 'delivered',
+        'opens_tracked_delivered' => 'opens_tracked_delivered',
+        'clicks_tracked_delivered' => 'clicks_tracked_delivered',
+        'by_tracking_domain' => 'by_tracking_domain'
     ];
 
     /**
@@ -225,7 +237,10 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
         'ctr' => 'setCtr',
         'ctor' => 'setCtor',
         'sent' => 'setSent',
-        'delivered' => 'setDelivered'
+        'delivered' => 'setDelivered',
+        'opens_tracked_delivered' => 'setOpensTrackedDelivered',
+        'clicks_tracked_delivered' => 'setClicksTrackedDelivered',
+        'by_tracking_domain' => 'setByTrackingDomain'
     ];
 
     /**
@@ -244,7 +259,10 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
         'ctr' => 'getCtr',
         'ctor' => 'getCtor',
         'sent' => 'getSent',
-        'delivered' => 'getDelivered'
+        'delivered' => 'getDelivered',
+        'opens_tracked_delivered' => 'getOpensTrackedDelivered',
+        'clicks_tracked_delivered' => 'getClicksTrackedDelivered',
+        'by_tracking_domain' => 'getByTrackingDomain'
     ];
 
     /**
@@ -315,6 +333,9 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
         $this->setIfExists('ctor', $data ?? [], null);
         $this->setIfExists('sent', $data ?? [], null);
         $this->setIfExists('delivered', $data ?? [], null);
+        $this->setIfExists('opens_tracked_delivered', $data ?? [], null);
+        $this->setIfExists('clicks_tracked_delivered', $data ?? [], null);
+        $this->setIfExists('by_tracking_domain', $data ?? [], null);
     }
 
     /**
@@ -567,7 +588,7 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
     /**
      * Sets open_rate
      *
-     * @param float $open_rate Unique opens / delivered as a percentage.
+     * @param float $open_rate Unique opens / delivered emails that had open tracking, as a percentage.
      *
      * @return self
      */
@@ -594,7 +615,7 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
     /**
      * Sets ctr
      *
-     * @param float $ctr Click-through rate: clicks / delivered as a percentage.
+     * @param float $ctr Click-through rate: unique clicks / delivered emails that had click tracking, as a percentage.
      *
      * @return self
      */
@@ -685,6 +706,108 @@ class AnalyticsEngagement implements ModelInterface, ArrayAccess, \JsonSerializa
             throw new \InvalidArgumentException('non-nullable delivered cannot be null');
         }
         $this->container['delivered'] = $delivered;
+
+        return $this;
+    }
+
+    /**
+     * Gets opens_tracked_delivered
+     *
+     * @return int|null
+     */
+    public function getOpensTrackedDelivered()
+    {
+        return $this->container['opens_tracked_delivered'];
+    }
+
+    /**
+     * Sets opens_tracked_delivered
+     *
+     * @param int|null $opens_tracked_delivered Delivered emails that had open tracking (the open-rate denominator).
+     *
+     * @return self
+     */
+    public function setOpensTrackedDelivered($opens_tracked_delivered)
+    {
+        if (is_null($opens_tracked_delivered)) {
+            array_push($this->openAPINullablesSetToNull, 'opens_tracked_delivered');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('opens_tracked_delivered', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['opens_tracked_delivered'] = $opens_tracked_delivered;
+
+        return $this;
+    }
+
+    /**
+     * Gets clicks_tracked_delivered
+     *
+     * @return int|null
+     */
+    public function getClicksTrackedDelivered()
+    {
+        return $this->container['clicks_tracked_delivered'];
+    }
+
+    /**
+     * Sets clicks_tracked_delivered
+     *
+     * @param int|null $clicks_tracked_delivered Delivered emails that had click tracking (the CTR denominator).
+     *
+     * @return self
+     */
+    public function setClicksTrackedDelivered($clicks_tracked_delivered)
+    {
+        if (is_null($clicks_tracked_delivered)) {
+            array_push($this->openAPINullablesSetToNull, 'clicks_tracked_delivered');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('clicks_tracked_delivered', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['clicks_tracked_delivered'] = $clicks_tracked_delivered;
+
+        return $this;
+    }
+
+    /**
+     * Gets by_tracking_domain
+     *
+     * @return \OpenAPI\Client\Model\AnalyticsEngagementByTrackingDomainInner[]|null
+     */
+    public function getByTrackingDomain()
+    {
+        return $this->container['by_tracking_domain'];
+    }
+
+    /**
+     * Sets by_tracking_domain
+     *
+     * @param \OpenAPI\Client\Model\AnalyticsEngagementByTrackingDomainInner[]|null $by_tracking_domain Volume and engagement per custom tracking domain. The row with `hostname: null` is the shared host. Empty when no tracking domain is configured.
+     *
+     * @return self
+     */
+    public function setByTrackingDomain($by_tracking_domain)
+    {
+        if (is_null($by_tracking_domain)) {
+            array_push($this->openAPINullablesSetToNull, 'by_tracking_domain');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('by_tracking_domain', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['by_tracking_domain'] = $by_tracking_domain;
 
         return $this;
     }

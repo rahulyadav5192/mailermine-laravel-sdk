@@ -67,7 +67,9 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
         'daily_series' => '\OpenAPI\Client\Model\AnalyticsOverviewDailySeriesInner[]',
         'top_campaigns' => '\OpenAPI\Client\Model\AnalyticsOverviewTopCampaignsInner[]',
         'top_links' => '\OpenAPI\Client\Model\AnalyticsOverviewTopLinksInner[]',
-        'recent_activity' => '\OpenAPI\Client\Model\AnalyticsOverviewRecentActivityInner[]'
+        'recent_activity' => '\OpenAPI\Client\Model\AnalyticsOverviewRecentActivityInner[]',
+        'tracking' => '\OpenAPI\Client\Model\AnalyticsOverviewTracking',
+        'tracking_domains' => '\OpenAPI\Client\Model\AnalyticsEngagementByTrackingDomainInner[]'
     ];
 
     /**
@@ -88,7 +90,9 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
         'daily_series' => null,
         'top_campaigns' => null,
         'top_links' => null,
-        'recent_activity' => null
+        'recent_activity' => null,
+        'tracking' => null,
+        'tracking_domains' => null
     ];
 
     /**
@@ -107,7 +111,9 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
         'daily_series' => false,
         'top_campaigns' => false,
         'top_links' => false,
-        'recent_activity' => false
+        'recent_activity' => false,
+        'tracking' => false,
+        'tracking_domains' => true
     ];
 
     /**
@@ -206,7 +212,9 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
         'daily_series' => 'dailySeries',
         'top_campaigns' => 'topCampaigns',
         'top_links' => 'topLinks',
-        'recent_activity' => 'recentActivity'
+        'recent_activity' => 'recentActivity',
+        'tracking' => 'tracking',
+        'tracking_domains' => 'trackingDomains'
     ];
 
     /**
@@ -225,7 +233,9 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
         'daily_series' => 'setDailySeries',
         'top_campaigns' => 'setTopCampaigns',
         'top_links' => 'setTopLinks',
-        'recent_activity' => 'setRecentActivity'
+        'recent_activity' => 'setRecentActivity',
+        'tracking' => 'setTracking',
+        'tracking_domains' => 'setTrackingDomains'
     ];
 
     /**
@@ -244,7 +254,9 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
         'daily_series' => 'getDailySeries',
         'top_campaigns' => 'getTopCampaigns',
         'top_links' => 'getTopLinks',
-        'recent_activity' => 'getRecentActivity'
+        'recent_activity' => 'getRecentActivity',
+        'tracking' => 'getTracking',
+        'tracking_domains' => 'getTrackingDomains'
     ];
 
     /**
@@ -315,6 +327,8 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
         $this->setIfExists('top_campaigns', $data ?? [], null);
         $this->setIfExists('top_links', $data ?? [], null);
         $this->setIfExists('recent_activity', $data ?? [], null);
+        $this->setIfExists('tracking', $data ?? [], null);
+        $this->setIfExists('tracking_domains', $data ?? [], null);
     }
 
     /**
@@ -486,7 +500,7 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
     /**
      * Sets open_rate
      *
-     * @param float $open_rate Unique opens / delivered as a percentage.
+     * @param float $open_rate Unique opens / delivered emails that had open tracking, as a percentage.
      *
      * @return self
      */
@@ -513,7 +527,7 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
     /**
      * Sets click_rate
      *
-     * @param float $click_rate Unique clicks / delivered as a percentage.
+     * @param float $click_rate Unique clicks / delivered emails that had click tracking, as a percentage.
      *
      * @return self
      */
@@ -685,6 +699,67 @@ class AnalyticsOverview implements ModelInterface, ArrayAccess, \JsonSerializabl
             throw new \InvalidArgumentException('non-nullable recent_activity cannot be null');
         }
         $this->container['recent_activity'] = $recent_activity;
+
+        return $this;
+    }
+
+    /**
+     * Gets tracking
+     *
+     * @return \OpenAPI\Client\Model\AnalyticsOverviewTracking|null
+     */
+    public function getTracking()
+    {
+        return $this->container['tracking'];
+    }
+
+    /**
+     * Sets tracking
+     *
+     * @param \OpenAPI\Client\Model\AnalyticsOverviewTracking|null $tracking tracking
+     *
+     * @return self
+     */
+    public function setTracking($tracking)
+    {
+        if (is_null($tracking)) {
+            throw new \InvalidArgumentException('non-nullable tracking cannot be null');
+        }
+        $this->container['tracking'] = $tracking;
+
+        return $this;
+    }
+
+    /**
+     * Gets tracking_domains
+     *
+     * @return \OpenAPI\Client\Model\AnalyticsEngagementByTrackingDomainInner[]|null
+     */
+    public function getTrackingDomains()
+    {
+        return $this->container['tracking_domains'];
+    }
+
+    /**
+     * Sets tracking_domains
+     *
+     * @param \OpenAPI\Client\Model\AnalyticsEngagementByTrackingDomainInner[]|null $tracking_domains Volume, engagement and health per custom tracking domain. The row with `hostname: null` is the shared host. Empty when no tracking domain is configured.
+     *
+     * @return self
+     */
+    public function setTrackingDomains($tracking_domains)
+    {
+        if (is_null($tracking_domains)) {
+            array_push($this->openAPINullablesSetToNull, 'tracking_domains');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('tracking_domains', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['tracking_domains'] = $tracking_domains;
 
         return $this;
     }

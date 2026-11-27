@@ -14876,11 +14876,11 @@
                     },
                     "open_rate": {
                         "type": "number",
-                        "description": "Unique opens / delivered as a percentage."
+                        "description": "Unique opens / delivered emails that had open tracking, as a percentage."
                     },
                     "ctr": {
                         "type": "number",
-                        "description": "Click-through rate: clicks / delivered as a percentage."
+                        "description": "Click-through rate: unique clicks / delivered emails that had click tracking, as a percentage."
                     },
                     "ctor": {
                         "type": "number",
@@ -14893,6 +14893,98 @@
                     "delivered": {
                         "type": "integer",
                         "description": "Total delivered."
+                    },
+                    "opens_tracked_delivered": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "description": "Delivered emails that had open tracking (the open-rate denominator)."
+                    },
+                    "clicks_tracked_delivered": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "description": "Delivered emails that had click tracking (the CTR denominator)."
+                    },
+                    "by_tracking_domain": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "description": "Volume and engagement per custom tracking domain. The row with `hostname: null` is the shared host. Empty when no tracking domain is configured.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "hostname": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "status": {
+                                    "type": "string"
+                                },
+                                "status_label": {
+                                    "type": "string"
+                                },
+                                "is_default": {
+                                    "type": "boolean"
+                                },
+                                "last_checked_at": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "last_error": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "sent": {
+                                    "type": "integer"
+                                },
+                                "delivered": {
+                                    "type": "integer"
+                                },
+                                "unique_opens": {
+                                    "type": "integer"
+                                },
+                                "unique_clicks": {
+                                    "type": "integer"
+                                },
+                                "open_rate": {
+                                    "type": "number"
+                                },
+                                "click_rate": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "hostname",
+                                "status",
+                                "status_label",
+                                "is_default",
+                                "last_checked_at",
+                                "last_error",
+                                "sent",
+                                "delivered",
+                                "unique_opens",
+                                "unique_clicks",
+                                "open_rate",
+                                "click_rate"
+                            ]
+                        }
                     }
                 },
                 "required": [
@@ -15026,11 +15118,11 @@
                     },
                     "openRate": {
                         "type": "number",
-                        "description": "Unique opens / delivered as a percentage."
+                        "description": "Unique opens / delivered emails that had open tracking, as a percentage."
                     },
                     "clickRate": {
                         "type": "number",
-                        "description": "Unique clicks / delivered as a percentage."
+                        "description": "Unique clicks / delivered emails that had click tracking, as a percentage."
                     },
                     "bounceRate": {
                         "type": "number",
@@ -15159,6 +15251,107 @@
                                 "event_label",
                                 "occurred_at",
                                 "message_uuid"
+                            ]
+                        }
+                    },
+                    "tracking": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "description": "Delivered emails and how many had opens / clicks tracked (the rate denominators).",
+                        "properties": {
+                            "delivered": {
+                                "type": "integer"
+                            },
+                            "opensTracked": {
+                                "type": "integer"
+                            },
+                            "clicksTracked": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "delivered",
+                            "opensTracked",
+                            "clicksTracked"
+                        ]
+                    },
+                    "trackingDomains": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "description": "Volume, engagement and health per custom tracking domain. The row with `hostname: null` is the shared host. Empty when no tracking domain is configured.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "hostname": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "status": {
+                                    "type": "string"
+                                },
+                                "status_label": {
+                                    "type": "string"
+                                },
+                                "is_default": {
+                                    "type": "boolean"
+                                },
+                                "last_checked_at": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "last_error": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "sent": {
+                                    "type": "integer"
+                                },
+                                "delivered": {
+                                    "type": "integer"
+                                },
+                                "unique_opens": {
+                                    "type": "integer"
+                                },
+                                "unique_clicks": {
+                                    "type": "integer"
+                                },
+                                "open_rate": {
+                                    "type": "number"
+                                },
+                                "click_rate": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "id",
+                                "hostname",
+                                "status",
+                                "status_label",
+                                "is_default",
+                                "last_checked_at",
+                                "last_error",
+                                "sent",
+                                "delivered",
+                                "unique_opens",
+                                "unique_clicks",
+                                "open_rate",
+                                "click_rate"
                             ]
                         }
                     }
