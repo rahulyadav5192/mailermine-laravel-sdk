@@ -53,8 +53,11 @@ final class Emails extends BaseResource
      *     metadata?: array<string, mixed>,
      *     tags?: list<string>,
      *     headers?: array<string, string>,
-     *     attachments?: list<array{filename: string, content: string, content_type?: string|null}>
-     * } $parameters Email fields supported by the MailerMine API.
+     *     attachments?: list<array{filename: string, content: string, content_type?: string|null}>,
+     *     tracking?: array{opens?: bool|null, clicks?: bool|null}
+     * } $parameters Email fields supported by the MailerMine API. `tracking` turns open/click
+     *               tracking on or off for this email (omitted keys use the project default);
+     *               add `data-mm-notrack` to an `<a>` tag to leave one link untracked.
      *
      * @example
      * $email = $mm->emails()->send([
@@ -65,6 +68,9 @@ final class Emails extends BaseResource
      * ]);
      *
      * echo $email->data()['uuid'];
+     *
+     * // No click tracking for a password reset link.
+     * $mm->emails()->send([..., 'tracking' => ['clicks' => false]]);
      *
      * // Safe to retry from your own code/queue: the same key never sends twice.
      * $mm->emails()->send([...], ['idempotency_key' => 'order-'.$order->id]);

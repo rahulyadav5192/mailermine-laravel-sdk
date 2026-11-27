@@ -64,6 +64,28 @@ final class ProjectsTest extends TestCase
         self::assertSame('DELETE', $this->historyRequest($history, 4)->getMethod());
     }
 
+    public function test_project_settings_keep_tracking_and_custom_keys(): void
+    {
+        $history = [];
+        $project = ['id' => 'project-1', 'name' => 'P', 'status' => 'active'];
+        $client = $this->mockClient([
+            $this->mockJsonResponse(201, $this->resourceResponse($project)),
+            $this->mockJsonResponse(200, $this->resourceResponse($project)),
+        ], $history);
+
+        $client->projects()->create([
+            'name' => 'P',
+            'settings' => ['region' => 'eu-west-1', 'tracking' => ['opens' => true, 'clicks' => false]],
+        ]);
+        $client->projects()->update('project-1', ['settings' => ['tracking' => ['clicks' => true]]]);
+
+        self::assertSame(
+            ['region' => 'eu-west-1', 'tracking' => ['opens' => true, 'clicks' => false]],
+            $this->body($this->historyRequest($history, 0))['settings'],
+        );
+        self::assertSame(['tracking' => ['clicks' => true]], $this->body($this->historyRequest($history, 1))['settings']);
+    }
+
     public function test_project_errors_are_mapped_to_sdk_exceptions(): void
     {
         $client = $this->mockClient([

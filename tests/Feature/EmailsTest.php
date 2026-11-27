@@ -82,6 +82,44 @@ final class EmailsTest extends TestCase
         self::assertSame('text/plain', $payload['attachments'][0]['content_type']);
     }
 
+    public function test_send_passes_tracking_overrides(): void
+    {
+        $history = [];
+        $client = $this->client([
+            $this->jsonResponse(202, [
+                'success' => true,
+                'message' => 'Message queued successfully.',
+                'data' => ['uuid' => 'message-uuid', 'status' => 'queued'],
+            ]),
+        ], $history);
+
+        $client->emails()->send([
+            'from' => 'hello@mailermine.com',
+            'to' => 'john@example.com',
+            'subject' => 'Reset your password',
+            'html' => '<a href="https://example.com/reset">Reset</a>',
+            'tracking' => ['opens' => true, 'clicks' => false],
+        ]);
+
+        $payload = json_decode((string) $this->recordedRequest($history)->getBody(), true, flags: JSON_THROW_ON_ERROR);
+
+        self::assertSame(['opens' => true, 'clicks' => false], $payload['tracking']);
+    }
+
+    public function test_send_without_tracking_omits_it(): void
+    {
+        $history = [];
+        $client = $this->client([
+            $this->jsonResponse(202, ['success' => true, 'message' => 'ok', 'data' => ['uuid' => 'm', 'status' => 'queued']]),
+        ], $history);
+
+        $client->emails()->send(['from' => 'a@b.com', 'to' => 'c@d.com', 'subject' => 'S', 'text' => 'T']);
+
+        $payload = json_decode((string) $this->recordedRequest($history)->getBody(), true, flags: JSON_THROW_ON_ERROR);
+
+        self::assertArrayNotHasKey('tracking', $payload);
+    }
+
     public function test_list_maps_filters_responses_and_pagination(): void
     {
         $history = [];
